@@ -136,11 +136,19 @@ app.post('/api/admin/login', (req, res) => {
 // Catch-all für statische Dateien
 app.get('*', (req, res) => {
   console.log(`📁 Datei angefragt: ${req.path}`);
-  const filePath = path.join(__dirname, req.path);
-  res.sendFile(filePath, (err) => {
+  
+  // Versuche zuerst im public Ordner
+  const publicPath = path.join(__dirname, 'public', req.path);
+  res.sendFile(publicPath, (err) => {
     if (err) {
-      console.log(`❌ Datei nicht gefunden: ${req.path}`);
-      res.status(404).send(`Datei nicht gefunden: ${req.path}`);
+      // Fallback: Root-Verzeichnis
+      const rootPath = path.join(__dirname, req.path);
+      res.sendFile(rootPath, (err2) => {
+        if (err2) {
+          console.log(`❌ Datei nicht gefunden: ${req.path} (weder in public noch root)`);
+          res.status(404).send(`Datei nicht gefunden: ${req.path}`);
+        }
+      });
     }
   });
 });
