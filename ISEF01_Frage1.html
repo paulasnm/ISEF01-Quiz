@@ -2,7 +2,6 @@
 <html lang="de">
     <head>
         <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Frage 1</title>
     </head>
 
@@ -16,7 +15,9 @@
             </div>
         </header>
         <main>
-            <h1>Frage 1</h1>
+            <h1>Frage 1</h1> <br>
+            <br>
+            <br>
             <div class="question-box">
                 <p>Was ist das Ergebnis von 5x5?</p>
                 <!-- Hinweis ob Frage richtig oder falsch -->
@@ -46,21 +47,24 @@
           </div>
         </div>
 
-        <footer>
-            <!--untere Navigation (Logout, AGBs etc.)-->
-                <div class="bottom-nav">
-                    <a href="ISEF01_Login.html">Logout</a>
-                    <a href="ISEF01_Nutzerprofil.html">Profil &amp; Einstellungen</a>
-                    <a href="ISEF01_Bibliothek.html">Fragenkatalog</a>
-                    <a href="ISEF01_AGB.html">AGB &amp; Impressum</a>
-                </div>
-        </footer>
+    </body>
+
+    <footer>
+        <!--untere Navigation (Logout, AGBs etc.)-->
+            <div class="bottom-nav">
+                <a href="ISEF01_Login.html">Logout</a>
+                <a href="ISEF01_Nutzerprofil.html">Profil &amp; Einstellungen</a>
+                <a href="ISEF01_Bibliothek.html">Fragenkatalog</a>
+                <a href="ISEF01_AGB.html">AGB &amp; Impressum</a>
+            </div>
+    </footer>
+</html>
 
 <style>
 .right-nav {
     text-align: right;
     padding: 12px 16px;
-    font-family: "IM FELL English SC", serif;
+    font-family: "IM FELL Englisch", serif;
     font-size: larger;
     margin-right: 50px;
     margin-top: 20px;
@@ -78,7 +82,7 @@
 .nav-left {
     margin-left: 50px;
     color: white;
-    font-family: "IM FELL English SC", serif;
+    font-family: "IM FELL Englisch", serif;
 }
 
 main {
@@ -100,7 +104,7 @@ body {
     background-position: center;
     background-repeat: no-repeat;
     background-attachment: fixed;
-    font-family: "IM FELL English SC", serif;
+    font-family: "IM FELL Englisch", serif;
     height: 100%;
     margin: 0;
     display: flex;
@@ -108,12 +112,12 @@ body {
 }
 
 h1 {
-    font-family: "IM FELL English SC", serif;
+    font-family: "IM FELL Englisch", serif;
     font-size: 50px;
     color: white;
-    text-align: center;   
-    font-weight: 500;
-    margin: 20px 0;
+    text-align: left;   
+    font-weight: 5;
+    margin-top: 50px;
     -webkit-text-stroke-width: 0.5px;
     -webkit-text-stroke-color: black;
 }
@@ -155,7 +159,7 @@ h1 {
     transition: transform 0.2s ease;
     width: 100%;
     max-width: none;
-    font-family: "IM FELL English SC", serif;
+    font-family: "IM FELL Englisch", serif;
 }
 .answer button:hover { transform: scale(1.05); }
 .answer button:disabled { cursor: not-allowed; }
@@ -209,7 +213,7 @@ h1 {
   font-size: 1.5em;
   cursor: pointer;
   box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-  font-family: "IM FELL English SC", serif;
+  font-family: "IM FELL Englisch", serif;
 }
 
 #chat-toggle:hover { 
@@ -243,7 +247,7 @@ h1 {
   flex: 1;
   padding: 10px;
   overflow-y: auto;
-  font-family: "IM FELL English SC", serif;
+  font-family: "IM FELL Englisch", serif;
   font-size: 0.9em;
 }
 #chat-input-box {
@@ -273,7 +277,6 @@ h1 {
   padding: 6px 10px;
   border-radius: 8px;
   max-width: 80%;
-  word-wrap: break-word;
 }
 .chat-self {
   background: #d1e7dd;
@@ -284,11 +287,14 @@ h1 {
   align-self: flex-start;
 }
 
-/* Footer */
+/* Position und Design untere Navigation */
+
 footer {
   margin-top: auto;
-  padding: 16px 0;
-  font-family: "IM FELL English SC", serif;
+  padding-top: 16px;
+  padding-bottom: 16px;
+  font-family: "IM FELL Englisch", serif;
+  font-size: larger;
 }
 
 .bottom-nav {
@@ -308,239 +314,215 @@ footer {
   color: #cccccc;
 }
 
-/* Responsive Design */
+
+/* Smartphones (bis 600px) */
 @media (max-width: 600px) {
+  body {
+    padding-left: 15px;
+    padding-right: 15px;
+    font-size: 0.9em;
+  }
+
   h1 {
     font-size: 2rem !important;
-    margin: 15px 0;
+    margin-top: 30px;
+    text-align: center;
   }
 
   .question-box {
     padding: 16px;
-    margin: 0 15px;
+    font-size: 1em;
   }
 
   .bottom-nav {
-    font-size: 0.9em;
+    font-size: 14px;
     flex-wrap: wrap;
     gap: 10px;
     justify-content: center;
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+
+  footer {
+    margin-bottom: 20px;
   }
 }
 
+/* Tablets (601px – 1024px) */
 @media (min-width: 601px) and (max-width: 1024px) {
-  h1 {
-    font-size: 2.5rem !important;
-  }
-
-  .bottom-nav {
+  body {
+    padding-left: 30px;
+    padding-right: 30px;
     font-size: 1em;
   }
-}
 
-@media (min-width: 1025px) {
   h1 {
-    font-size: 3rem !important;
+    font-size: 2.5rem !important;
+    margin-top: 40px;
+    text-align: center;
+  }
+
+  .question-box {
+    padding: 20px;
+    font-size: 1.1em;
   }
 
   .bottom-nav {
+    font-size: 18px;
+    flex-wrap: wrap;
+    gap: 15px;
+  }
+
+  footer {
+    margin-bottom: 30px;
+  }
+}
+
+/* Desktop (ab 1025px) */
+@media (min-width: 1025px) {
+  body {
+    padding-left: 40px;
+    padding-right: 40px;
+    font-size: 1.05em;
+  }
+
+  h1 {
+    font-size: 3rem !important;
+    margin-top: 60px;
+  }
+
+  .question-box {
+    padding: 24px;
     font-size: 1.2em;
+  }
+
+  .bottom-nav {
+    font-size: 20px;
+    gap: 30px;
+  }
+
+  footer {
+    margin-bottom: 50px;
   }
 }
 </style>
 
-<!-- Socket.IO Client -->
-<script src="/socket.io/socket.io.js"></script>
-
 <script>
-// ==================== QUIZ LOGIK ====================
 
-const QUESTION_ID = "Q1";           
-const IS_FIRST_QUESTION = true;     
-const IS_RESULTS_PAGE = false;      
-
-// Münzen-Logik
-const COINS_KEY = "coins";
-
-function getCoins() {
-  const v = parseInt(localStorage.getItem(COINS_KEY) || "0", 10);
-  return isNaN(v) ? 0 : v;
-}
-
-function setCoins(v) {
-  localStorage.setItem(COINS_KEY, String(v));
-  const coinsEl = document.getElementById("coins");
-  if (coinsEl) coinsEl.textContent = String(v);
-}
-
-function addCoins(n = 1) {
-  setCoins(getCoins() + n);
-}
-
-const AWARD_FLAG_KEY = "awarded:" + QUESTION_ID;
-
-function addCoinOnceForThisQuestion() {
-  if (!QUESTION_ID) return false;
-  if (localStorage.getItem(AWARD_FLAG_KEY) === "1") return false;
-  addCoins(1);
-  localStorage.setItem(AWARD_FLAG_KEY, "1");
-  return true;
-}
-
-function resetQuizProgress() {
-  localStorage.setItem(COINS_KEY, "0");
-  const keys = Object.keys(localStorage);
-  for (const k of keys) {
-    if (k.startsWith("awarded:")) localStorage.removeItem(k);
-  }
-}
-
-function checkAnswer(button, isCorrect) {
-  const buttons = document.querySelectorAll(".answer button");
-  const nextbutton = document.getElementById("next-button");
-  const hintEl = document.getElementById("hint");
-  const correctBtn = document.querySelector('.answer button[onclick*="true"]');
-  const correctText = correctBtn ? correctBtn.textContent.trim() : "";
-
-  buttons.forEach(btn => { btn.disabled = true; btn.style.opacity = "0.8"; });
-
-  if (isCorrect) {
-    button.style.backgroundColor = "#4CAF50";
-    addCoinOnceForThisQuestion();
-
-    if (hintEl) {
-      hintEl.style.display = "block";
-      hintEl.textContent = "✅ Richtig! Du hast eine Goldmünze verdient.";
-      hintEl.classList.remove("hint-wrong");
-      hintEl.classList.add("hint-correct");
-    }
-  } else {
-    button.style.backgroundColor = "#d9534f";
-    if (hintEl) {
-      hintEl.style.display = "block";
-      hintEl.textContent = correctText
-        ? `ℹ️ Hinweis: Die richtige Antwort ist ${correctText}.`
-        : "ℹ️ Hinweis: Die richtige Antwort ist die grün markierte Option.";
-      hintEl.classList.remove("hint-correct");
-      hintEl.classList.add("hint-wrong");
-    }
-  }
-  if (nextbutton) nextbutton.style.display = "inline-block";
-}
-
-// ==================== CHAT LOGIK ====================
-
-const socket = io();
-const username = localStorage.getItem('username') || 'Spieler';
-const isMultiplayer = localStorage.getItem('multiplayer') === 'true';
-
-let chatToggle, chatWindow, chatClose, chatMessages, chatInput, chatSend;
-
-function sendChatMessage() {
-    const message = chatInput.value.trim();
-    if (message === "") return;
+    // Konfiguration der Seite
+    const QUESTION_ID = "Q1";           // <-- pro Frage anpassen ("Q2", "Q3", ...)
+    const IS_FIRST_QUESTION = true;     // <-- auf Frage 1: true
+    const IS_RESULTS_PAGE = false;      // <-- nur auf Ergebnis-Seite: true
     
-    socket.emit('chat-message', {
-        text: message,
-        username: username,
-        timestamp: new Date().toISOString()
+    
+    // Münzen-Logik (Zählen der Münzen)
+    const COINS_KEY = "coins";
+    
+    function getCoins() {
+      const v = parseInt(localStorage.getItem(COINS_KEY) || "0", 10);
+      return isNaN(v) ? 0 : v;
+    }
+    function setCoins(v) {
+      localStorage.setItem(COINS_KEY, String(v));
+      const coinsEl = document.getElementById("coins");
+      if (coinsEl) coinsEl.textContent = String(v);
+    }
+    function addCoins(n = 1) {
+      setCoins(getCoins() + n);
+    }
+    
+    
+    // Pro Frage gibt es maximal 1 Münze
+    const AWARD_FLAG_KEY = "awarded:" + QUESTION_ID;
+    function addCoinOnceForThisQuestion() {
+      if (!QUESTION_ID) return false;
+      if (localStorage.getItem(AWARD_FLAG_KEY) === "1") return false;
+      addCoins(1);
+      localStorage.setItem(AWARD_FLAG_KEY, "1");
+      return true;
+    }
+    
+    
+    // Münzen werden bei einem neuen Quiz zurückgesetzt
+    function resetQuizProgress() {
+      localStorage.setItem(COINS_KEY, "0");
+      const keys = Object.keys(localStorage);
+      for (const k of keys) {
+        if (k.startsWith("awarded:")) localStorage.removeItem(k);
+      }
+    }
+    
+    // Antwort wird überprüft und ein Hinweis angezeigt
+    function checkAnswer(button, isCorrect) {
+      const buttons = document.querySelectorAll(".answer button");
+      const nextbutton = document.getElementById("next-button");
+      const hintEl = document.getElementById("hint");
+      const correctBtn = document.querySelector('.answer button[onclick*="true"]');
+      const correctText = correctBtn ? correctBtn.textContent.trim() : "";
+    
+      buttons.forEach(btn => { btn.disabled = true; btn.style.opacity = "0.8"; });
+    
+      if (isCorrect) {
+        button.style.backgroundColor = "#4CAF50";
+        addCoinOnceForThisQuestion();
+    
+        if (hintEl) {
+          hintEl.style.display = "block";
+          hintEl.textContent = "✅ Richtig! Du hast eine Goldmünze verdient.";
+          hintEl.classList.remove("hint-wrong");
+          hintEl.classList.add("hint-correct");
+        }
+      } else {
+        button.style.backgroundColor = "#d9534f";
+        if (hintEl) {
+          hintEl.style.display = "block";
+          hintEl.textContent = correctText
+            ? `ℹ️ Hinweis: Die richtige Antwort ist ${correctText}.`
+            : "ℹ️ Hinweis: Die richtige Antwort ist die grün markierte Option.";
+          hintEl.classList.remove("hint-correct");
+          hintEl.classList.add("hint-wrong");
+        }
+      }
+      if (nextbutton) nextbutton.style.display = "inline-block";
+    }
+    
+    // Initialisierung
+    document.addEventListener("DOMContentLoaded", () => {
+      if (IS_FIRST_QUESTION) resetQuizProgress();
+      setCoins(getCoins());
+      if (IS_RESULTS_PAGE) showTotalOnResults();
     });
     
-    chatInput.value = "";
-}
-
-function addMessage(text, messageUsername = username, self = false) {
-    if (!chatMessages) return;
     
-    const msg = document.createElement("div");
-    msg.classList.add("chat-message", self ? "chat-self" : "chat-other");
+    // Chat-Funktionalität
+    const chatToggle = document.getElementById("chat-toggle");
+    const chatWindow = document.getElementById("chat-window");
+    const chatClose = document.getElementById("chat-close");
+    const chatMessages = document.getElementById("chat-messages");
+    const chatInput = document.getElementById("chat-input");
+    const chatSend = document.getElementById("chat-send");
     
-    if (!self && messageUsername && messageUsername !== 'System') {
-        msg.innerHTML = `<strong>${messageUsername}:</strong> ${text}`;
-    } else if (messageUsername === 'System') {
-        msg.innerHTML = `<em style="color: #666;">${text}</em>`;
-    } else {
-        msg.textContent = text;
+    chatToggle.addEventListener("click", () => {
+      chatWindow.style.display = "flex";
+    });
+    chatClose.addEventListener("click", () => {
+      chatWindow.style.display = "none";
+    });
+    function addMessage(text, self = true) {
+      const msg = document.createElement("div");
+      msg.classList.add("chat-message", self ? "chat-self" : "chat-other");
+      msg.textContent = text;
+      chatMessages.appendChild(msg);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
     }
+    chatSend.addEventListener("click", () => {
+      if (chatInput.value.trim() !== "") {
+        addMessage(chatInput.value, true);
+        chatInput.value = "";
+      }
+    });
+    chatInput.addEventListener("keypress", (e) => {
+      if (e.key === "Enter") chatSend.click();
+    });
     
-    chatMessages.appendChild(msg);
-    chatMessages.scrollTop = chatMessages.scrollHeight;
-}
-
-function initializeChat() {
-    chatToggle = document.getElementById("chat-toggle");
-    chatWindow = document.getElementById("chat-window");
-    chatClose = document.getElementById("chat-close");
-    chatMessages = document.getElementById("chat-messages");
-    chatInput = document.getElementById("chat-input");
-    chatSend = document.getElementById("chat-send");
-    
-    if (!isMultiplayer && chatToggle) {
-        chatToggle.style.display = 'none';
-        return;
-    }
-    
-    if (chatToggle && chatWindow) {
-        chatToggle.addEventListener("click", () => {
-            chatWindow.style.display = "flex";
-        });
-    }
-    
-    if (chatClose && chatWindow) {
-        chatClose.addEventListener("click", () => {
-            chatWindow.style.display = "none";
-        });
-    }
-    
-    if (chatSend) {
-        chatSend.addEventListener("click", sendChatMessage);
-    }
-    
-    if (chatInput) {
-        chatInput.addEventListener("keypress", (e) => {
-            if (e.key === "Enter") {
-                sendChatMessage();
-            }
-        });
-    }
-}
-
-// Socket Events
-socket.on('chat-message', (data) => {
-    const isFromSelf = data.username === username;
-    addMessage(data.text, data.username, isFromSelf);
-});
-
-socket.on('player-joined', (data) => {
-    addMessage(`${data.username} ist dem Spiel beigetreten`, 'System', false);
-});
-
-socket.on('player-left', (data) => {
-    addMessage(`${data.username} hat das Spiel verlassen`, 'System', false);
-});
-
-socket.on('connect', () => {
-    if (isMultiplayer) {
-        socket.emit('join-chat', { username: username });
-        console.log('Chat beigetreten als:', username);
-    }
-});
-
-socket.on('disconnect', () => {
-    console.log('Chat getrennt');
-});
-
-// Initialisierung
-document.addEventListener("DOMContentLoaded", () => {
-    if (IS_FIRST_QUESTION) resetQuizProgress();
-    setCoins(getCoins());
-    initializeChat();
-    
-    console.log('Quiz und Chat initialisiert');
-    console.log('Multiplayer:', isMultiplayer);
-    console.log('Username:', username);
-});
-</script>
-
-    </body>
-</html>
+    </script>
