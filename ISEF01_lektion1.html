@@ -277,30 +277,71 @@ footer {
 <script src="/socket.io/socket.io.js"></script>
 
 <script>
-    // Lobby-Logik mit Socket.IO
+    // Socket.IO Verbindung etablieren (funktioniert automatisch für lokale und Production-Umgebung)
     const socket = io();
-  
+    
+    console.log('🔌 Socket.IO Client verbunden');
+
     function joinGroup(event) {
-      event.preventDefault();
-  
-      // Anfrage an den Server
-      socket.emit("requestJoin");
-  
-      // Antwort vom Server empfangen
-      socket.once("joinResponse", (data) => {
-        if (!data.success) {
-          alert("Es sind aktuell nicht genügend Spieler online. Bitte warte einen Moment oder spiele alleine.");
-          return;
+        event.preventDefault();
+        
+        console.log('👥 Versuche der Lobby beizutreten...');
+        
+        // Anfrage an den Server senden
+        socket.emit("requestJoin");
+        
+        // Zeige Loading-Nachricht
+        const button = event.target;
+        const originalText = button.textContent;
+        button.textContent = "Suche Mitspieler...";
+        button.disabled = true;
+        
+        // Timeout falls keine Antwort kommt
+        const timeout = setTimeout(() => {
+            alert("Verbindungsfehler. Bitte versuche es erneut oder spiele alleine.");
+            button.textContent = originalText;
+            button.disabled = false;
+        }, 10000); // 10 Sekunden Timeout
+    }
+    
+    // Antwort vom Server empfangen
+    socket.on("joinResponse", (data) => {
+        console.log('📨 Server-Antwort erhalten:', data);
+        
+        // Reset button
+        const button = document.querySelector('a[onclick*="joinGroup"]');
+        if (button) {
+            button.textContent = "Der Lobby beitreten";
+            button.disabled = false;
         }
-  
+        
+        if (!data.success) {
+            alert("Es sind aktuell nicht genügend Spieler online. Bitte warte einen Moment oder spiele alleine.");
+            return;
+        }
+
+        // Erfolgreiche Gruppenzuteilung
         alert("Du wurdest einer Gruppe zugeteilt: " + data.group.join(", ") + "\nViel Erfolg im Spiel!");
-  
+
         // Multiplayer-Flag setzen
         localStorage.setItem("multiplayer", "true");
-  
+        localStorage.setItem("groupId", data.groupId || "unknown");
+
         // Spieler zur ersten Frage weiterleiten
         window.location.href = "ISEF01_Frage1.html";
-      });
-    }
-  </script>
-  
+    });
+    
+    // Verbindungsstatus überwachen
+    socket.on('connect', () => {
+        console.log('✅ Socket.IO verbunden');
+    });
+    
+    socket.on('disconnect', () => {
+        console.log('❌ Socket.IO getrennt');
+    });
+    
+    socket.on('connect_error', (error) => {
+        console.error('💥 Socket.IO Verbindungsfehler:', error);
+        alert('Verbindung zum Server fehlgeschlagen. Bitte lade die Seite neu.');
+    });
+</script>
