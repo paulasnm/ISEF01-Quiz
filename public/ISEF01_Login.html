@@ -224,6 +224,7 @@ async function loginPruefung(event) {
       return false;
       
     } catch (error) {
+
       // Auch bei Server-Fehler Admin-Zugang gewähren
       console.log('Admin-Login: Server nicht erreichbar, lokaler Login');
       localStorage.setItem("isAdmin", "true");
@@ -285,7 +286,7 @@ async function loginPruefung(event) {
   return false;
 }
 
-// Passwort-Sichtbarkeit umschalten
+// Passwort-Sichtbarkeit umschalten (nur einmal definiert!)
 function togglePasswortsichtbarkeit() {
   const passwortfeld = document.getElementById("passwort");
   const toggle = document.getElementById("togglePasswort");
@@ -299,22 +300,7 @@ function togglePasswortsichtbarkeit() {
   }
 }
 
-// Beim Laden der Seite: Prüfen ob bereits eingeloggt
-window.addEventListener('DOMContentLoaded', () => {
-  const isAdmin = localStorage.getItem('isAdmin');
-  const username = localStorage.getItem('username');
-  
-  // Automatische Weiterleitung falls bereits eingeloggt
-  if (username) {
-    if (isAdmin === 'true') {
-      console.log('Admin bereits eingeloggt, weiterleiten...');
-      window.location.href = "ISEF01_Admin.html";
-    } else {
-      console.log('Benutzer bereits eingeloggt, weiterleiten...');
-      window.location.href = "ISEF01_Benutzer.html";  
-    }
-  }
-});
+
 
 // Enter-Taste im Formular abfangen
 document.addEventListener('DOMContentLoaded', () => {
@@ -327,19 +313,5 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   }
-});
-
-  // Passwort-Sichtbarkeit umschalten
-  function togglePasswortsichtbarkeit() {
-    const passwortfeld = document.getElementById("passwort");
-    const toggle = document.getElementById("togglePasswort");
-
-    if (passwortfeld.type === "password") {
-      passwortfeld.type = "text";
-      toggle.textContent = "👁️ Passwort verbergen";
-    } else {
-      passwortfeld.type = "password";
-      toggle.textContent = "👁️ Passwort anzeigen";
-    }
-  }
+})
 </script>

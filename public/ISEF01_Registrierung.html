@@ -322,27 +322,9 @@
   } catch (error) {
     console.error('Registrierung Fehler:', error);
     
-    // Fallback: Demo-Speicherung
-    alert("Server nicht verfügbar. Daten werden lokal gespeichert (Demo-Modus).");
     
-    localStorage.setItem('registeredUser', JSON.stringify({
-      firstname,
-      surname,
-      username,
-      email,
-      avatar: avatarFile,
-      userId: 'demo_' + Date.now()
-    }));
     
-    localStorage.setItem('demoProfile', JSON.stringify({
-      prename: firstname,
-      surname: surname,
-      username: username,
-      email: email,
-      avatar: avatarFile
-    }));
-    
-    window.location.href = "ISEF01_Login.html";
+    window.location.href = "ISEF01_Karte.html";
   }
 });
 </script>
