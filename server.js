@@ -1,14 +1,24 @@
 const express = require('express');
+const http = require('http');
+const socketIo = require('socket.io');
 const path = require('path');
 
 const app = express();
+const server = http.createServer(app);
+const io = socketIo(server, {
+  cors: {
+    origin: "https://isef01-quiz-1.onrender.com", 
+    methods: ["GET", "POST"]
+  }
+});
+
 const PORT = process.env.PORT || 3000;
 
-// Basic Middleware
+// Middleware
 app.use(express.json());
 app.use(express.static('.'));
 
-console.log('🔧 Server startet - Debug Modus');
+console.log('🚀 Schatzinsel Server mit Socket.IO startet...');
 
 // Demo-Benutzer
 const users = [
@@ -16,169 +26,219 @@ const users = [
   { id: 2, username: 'admin', password: 'admin123' }
 ];
 
-// Test Route
-app.get('/', (req, res) => {
-  console.log('📍 Root-Route aufgerufen');
-  try {
-    // Versuche verschiedene HTML-Dateien zu finden
-    const possibleFiles = [
-      'ISEF01_Login.html',
-      'index.html', 
-      'login.html'
-    ];
+// Lobby-System
+let waitingPlayers = [];
+let activeGroups = [];
+
+// Socket.IO Verbindungen
+io.on('connection', (socket) => {
+  console.log(`🔌 Neuer Spieler verbunden: ${socket.id}`);
+
+  // Lobby beitreten
+  socket.on('requestJoin', () => {
+    console.log(`👥 Spieler ${socket.id} möchte der Lobby beitreten`);
     
-    // Liste alle Dateien im Verzeichnis
-    const fs = require('fs');
-    const files = fs.readdirSync('.');
-    console.log('📁 Verfügbare Dateien:', files);
-    
-    // Suche nach HTML-Dateien
-    const htmlFiles = files.filter(f => f.endsWith('.html'));
-    console.log('🌐 HTML-Dateien gefunden:', htmlFiles);
-    
-    if (htmlFiles.length > 0) {
-      const firstHtml = htmlFiles[0];
-      console.log(`✅ Verwende: ${firstHtml}`);
-      res.sendFile(path.join(__dirname, firstHtml));
+    // Füge Spieler zur Warteschlange hinzu
+    waitingPlayers.push({
+      id: socket.id,
+      socket: socket,
+      joinedAt: new Date()
+    });
+
+    console.log(`⏳ Wartende Spieler: ${waitingPlayers.length}`);
+
+    // Versuche Gruppe zu bilden (mindestens 2 Spieler)
+    if (waitingPlayers.length >= 2) {
+      // Nimm die ersten 2-4 Spieler
+      const groupSize = Math.min(4, waitingPlayers.length);
+      const newGroup = waitingPlayers.splice(0, groupSize);
+      
+      const groupNames = newGroup.map(p => `Spieler${p.id.substring(0, 4)}`);
+      
+      console.log(`🎮 Neue Gruppe erstellt: ${groupNames.join(', ')}`);
+      
+      // Alle Spieler in der Gruppe benachrichtigen
+      newGroup.forEach(player => {
+        player.socket.emit('joinResponse', {
+          success: true,
+          group: groupNames,
+          groupId: activeGroups.length,
+          message: 'Gruppe gefunden! Das Spiel beginnt...'
+        });
+      });
+      
+      // Gruppe zu aktiven Gruppen hinzufügen
+      activeGroups.push({
+        id: activeGroups.length,
+        players: newGroup,
+        createdAt: new Date()
+      });
+      
     } else {
-      // Fallback HTML
-      res.send(`
-        <html>
-        <head><title>Schatzinsel Quiz - Debug</title></head>
-        <body>
-          <h1>🏴‍☠️ Schatzinsel Quiz</h1>
-          <p><strong>Server läuft!</strong></p>
-          <p>Verfügbare HTML-Dateien: ${htmlFiles.join(', ') || 'Keine gefunden'}</p>
-          <p>Alle Dateien: ${files.join(', ')}</p>
-          <hr>
-          <h2>Login testen:</h2>
-          <form id="testForm">
-            <input type="text" id="user" placeholder="Benutzername" value="demo">
-            <input type="password" id="pass" placeholder="Passwort" value="demo123">
-            <button type="button" onclick="testLogin()">Login testen</button>
-          </form>
-          <div id="result"></div>
-          
-          <script>
-          async function testLogin() {
-            const user = document.getElementById('user').value;
-            const pass = document.getElementById('pass').value;
-            
-            try {
-              const response = await fetch('/api/login', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({username: user, password: pass})
-              });
-              const result = await response.json();
-              document.getElementById('result').innerHTML = 
-                '<pre>' + JSON.stringify(result, null, 2) + '</pre>';
-            } catch(e) {
-              document.getElementById('result').innerHTML = 'Fehler: ' + e.message;
-            }
-          }
-          </script>
-        </body>
-        </html>
-      `);
+      // Nicht genug Spieler - warten oder alleine spielen vorschlagen
+      socket.emit('joinResponse', {
+        success: false,
+        message: 'Warte auf weitere Spieler oder spiele alleine...',
+        waitingCount: waitingPlayers.length
+      });
     }
-  } catch (error) {
-    console.error('❌ Fehler in Root-Route:', error);
-    res.status(500).send('Server-Fehler: ' + error.message);
+  });
+
+  // Spieler verlässt die Verbindung
+  socket.on('disconnect', () => {
+    console.log(`🔌 Spieler getrennt: ${socket.id}`);
+    
+    // Aus Warteschlange entfernen
+    waitingPlayers = waitingPlayers.filter(p => p.id !== socket.id);
+    
+    // Aus aktiven Gruppen entfernen
+    activeGroups = activeGroups.filter(group => {
+      group.players = group.players.filter(p => p.id !== socket.id);
+      return group.players.length > 0; // Gruppe löschen wenn leer
+    });
+  });
+});
+
+// Root-Route - IMMER Startseite anzeigen
+app.get('/', (req, res) => {
+  console.log('📍 Root-Route aufgerufen - leite zu Startseite weiter');
+  
+  // Versuche verschiedene Startseiten-Dateien zu finden
+  const possibleStartFiles = [
+    'ISEF01_Startseite.html'
+  ];
+  
+  let startFound = false;
+  
+  for (const filename of possibleStartFiles) {
+    const startPath = path.join(__dirname, filename);
+    
+    try {
+      // Prüfe ob Datei existiert
+      require('fs').accessSync(startPath);
+      console.log(`✅ Startseite gefunden: ${filename}`);
+      res.sendFile(startPath);
+      startFound = true;
+      break;
+    } catch (err) {
+      // Datei existiert nicht, versuche nächste
+      continue;
+    }
+  }
+  
+  // Falls keine Startseite gefunden wird
+  if (!startFound) {
+    console.log('❌ Keine Startseite gefunden');
+    res.status(404).send('Startseite nicht gefunden. Stelle sicher, dass ISEF01_Startseite.html existiert.');
   }
 });
 
 // Login API
 app.post('/api/login', (req, res) => {
-  console.log('🔑 Login-Anfrage erhalten');
-  try {
-    const { username, password } = req.body;
-    console.log(`👤 Login-Versuch: ${username}`);
-    
-    const user = users.find(u => u.username === username && u.password === password);
-    
-    if (user) {
-      console.log(`✅ Login erfolgreich: ${username}`);
-      if (username === 'admin') {
-        res.json({ success: true, user: { username, isAdmin: true } });
-      } else {
-        res.json({ success: true, user: { id: user.id, username } });
-      }
+  const { username, password } = req.body;
+  console.log(`👤 Login-Versuch: ${username}`);
+  
+  const user = users.find(u => u.username === username && u.password === password);
+  
+  if (user) {
+    console.log(`✅ Login erfolgreich: ${username}`);
+    if (username === 'admin') {
+      res.json({ success: true, user: { username, isAdmin: true } });
     } else {
-      console.log(`❌ Login fehlgeschlagen: ${username}`);
-      res.status(401).json({ error: 'Ungültige Anmeldedaten' });
+      res.json({ success: true, user: { id: user.id, username, isAdmin: false } });
     }
-  } catch (error) {
-    console.error('❌ Login-API Fehler:', error);
-    res.status(500).json({ error: 'Login-Server-Fehler: ' + error.message });
+  } else {
+    console.log(`❌ Login fehlgeschlagen: ${username}`);
+    res.status(401).json({ error: 'Ungültige Anmeldedaten' });
   }
 });
 
 // Admin Login API
 app.post('/api/admin/login', (req, res) => {
-  console.log('👑 Admin-Login-Anfrage erhalten');
-  try {
-    const { username, password } = req.body;
-    
-    if (username === 'admin' && password === 'admin123') {
-      console.log('✅ Admin-Login erfolgreich');
-      res.json({ success: true, user: { username: 'admin', isAdmin: true }});
-    } else {
-      console.log('❌ Admin-Login fehlgeschlagen');
-      res.status(401).json({ error: 'Ungültige Admin-Anmeldedaten' });
-    }
-  } catch (error) {
-    console.error('❌ Admin-Login Fehler:', error);
-    res.status(500).json({ error: 'Admin-Login-Fehler: ' + error.message });
+  const { username, password } = req.body;
+  if (username === 'admin' && password === 'admin123') {
+    console.log('✅ Admin-Login erfolgreich');
+    res.json({ success: true, user: { username: 'admin', isAdmin: true }});
+  } else {
+    console.log('❌ Admin-Login fehlgeschlagen');
+    res.status(401).json({ error: 'Ungültige Admin-Anmeldedaten' });
   }
 });
 
-// Catch-all für statische Dateien
+// Registrierung API (optional)
+app.post('/api/register', (req, res) => {
+  const { username, password } = req.body;
+  
+  // Prüfen ob Benutzer bereits existiert
+  const existingUser = users.find(u => u.username === username);
+  if (existingUser) {
+    return res.status(400).json({ error: 'Benutzername bereits vergeben' });
+  }
+  
+  // Neuen Benutzer hinzufügen (nur für Demo - geht bei Server-Neustart verloren)
+  const newUser = {
+    id: users.length + 1,
+    username,
+    password
+  };
+  users.push(newUser);
+  
+  console.log(`✅ Neuer Benutzer registriert: ${username}`);
+  res.json({ 
+    success: true, 
+    user: { id: newUser.id, username: newUser.username }
+  });
+});
+
+// Lobby Status API (Debug)
+app.get('/api/lobby/status', (req, res) => {
+  res.json({
+    waitingPlayers: waitingPlayers.length,
+    activeGroups: activeGroups.length,
+    totalConnectedPlayers: io.engine.clientsCount
+  });
+});
+
+// Quiz API (Beispiel für später)
+app.get('/api/questions', (req, res) => {
+  const questions = [
+    {
+      id: 1,
+      question: "Wie viel ist 2 + 2?",
+      answers: ["3", "4", "5", "6"],
+      correct: 1
+    },
+    {
+      id: 2,
+      question: "Was ist die Hauptstadt von Deutschland?",
+      answers: ["München", "Hamburg", "Berlin", "Köln"],
+      correct: 2
+    }
+  ];
+  res.json(questions);
+});
+
+// Alle anderen Dateien (HTML, CSS, JS, Bilder)
 app.get('*', (req, res) => {
   console.log(`📁 Datei angefragt: ${req.path}`);
-  
-  // Versuche zuerst im public Ordner
-  const publicPath = path.join(__dirname, 'public', req.path);
-  res.sendFile(publicPath, (err) => {
+  res.sendFile(path.join(__dirname, req.path), (err) => {
     if (err) {
-      // Fallback: Root-Verzeichnis
-      const rootPath = path.join(__dirname, req.path);
-      res.sendFile(rootPath, (err2) => {
-        if (err2) {
-          console.log(`❌ Datei nicht gefunden: ${req.path} (weder in public noch root)`);
-          res.status(404).send(`Datei nicht gefunden: ${req.path}`);
-        }
-      });
+      console.log(`❌ Datei nicht gefunden: ${req.path}`);
+      res.status(404).send(`Datei nicht gefunden: ${req.path}`);
     }
   });
 });
 
-// Global Error Handler
+// Error Handler
 app.use((err, req, res, next) => {
-  console.error('💥 Unerwarteter Fehler:', err);
-  res.status(500).json({ 
-    error: 'Unerwarteter Server-Fehler', 
-    message: err.message,
-    stack: process.env.NODE_ENV === 'development' ? err.stack : undefined
-  });
+  console.error('💥 Server-Fehler:', err);
+  res.status(500).json({ error: 'Interner Server-Fehler' });
 });
 
-// Server starten
-app.listen(PORT, '0.0.0.0', () => {
-  console.log(`🚀 Debug-Server läuft auf Port ${PORT}`);
-  console.log(`📋 Verfügbare Login-Daten:`);
-  console.log(`   👤 demo / demo123`);
-  console.log(`   👑 admin / admin123`);
-  console.log(`🔍 Debug-Modus aktiviert - schaue in die Logs!`);
-});
-
-// Unhandled Promise Rejections
-process.on('unhandledRejection', (reason, promise) => {
-  console.error('💥 Unhandled Promise Rejection:', reason);
-});
-
-// Uncaught Exceptions  
-process.on('uncaughtException', (error) => {
-  console.error('💥 Uncaught Exception:', error);
-  process.exit(1);
+// Server starten (wichtig: server statt app!)
+server.listen(PORT, '0.0.0.0', () => {
+  console.log(`🚀 Schatzinsel Server mit Socket.IO läuft auf Port ${PORT}`);
+  console.log(`🎮 Lobby-System aktiviert`);
+  console.log(`📋 Demo-Login: demo/demo123 oder admin/admin123`);
+  console.log(`🌐 Socket.IO bereit für Multiplayer`);
 });
