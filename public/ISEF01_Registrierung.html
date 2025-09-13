@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Registrierung</title>
+  </head>
+
+  <body>
+    <div class="regist-box">
+      <h1>Registrierung Schatzinsel</h1>
+      <form id="registerForm" action="/registrieren" method="post">
+        <input type="text" id="prename" placeholder="Vorname" required><br>
+        <input type="text" id="surname" placeholder="Nachname" required><br>
+        <input type="text" id="nutzername" placeholder="Nutzername" required  minlength="3"><br>
+        <input type="email" id="email" placeholder="Email" required><br>
+        <input type="password" id="password" placeholder="Passwort" required minlength="5"><br>
+
+        <p>Bitte wähle nun noch einen Avatar aus</p>
+
+        <div class="avatar-auswahl">
+          <label>
+            <input type="radio" name="avatar" value="avatar1.jpeg" required>
+            <img src="avatar1.jpeg" alt="Pirat 1">
+          </label>
+          <label>
+            <input type="radio" name="avatar" value="avatar2.jpeg">
+            <img src="avatar2.jpeg" alt="Pirat 2">
+          </label>
+          <label>
+            <input type="radio" name="avatar" value="avatar3.jpeg">
+            <img src="avatar3.jpeg" alt="Pirat 3">
+          </label>
+        </div>
+        <input type="submit" value="Registrieren">
+      </form>
+      <a href="ISEF01_Login.html">Zurück zum Login</a>
+    </div>
+  </body>
+</html>
+
+<!--Gestalung der Seite-->
+<style>
+  h1 {
+    -webkit-text-stroke-width: 0.5px;
+    -webkit-text-stroke-color: black;
+  }
+
+  body {
+    margin: 0;
+    padding: 0;
+    background-image: url("Die Schatzinsel2.jpeg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 100vh;
+    font-family: "IM FELL Englisch", serif;
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
+
+  a {
+    text-decoration: none;
+    color: #f5f5f5;
+    font-family: "IM FELL Englisch", serif;
+    display: block;
+    margin-top: 1em;
+  }
+
+  a:hover {
+    text-decoration: none;
+    color: #ffffff;  
+  }
+
+  .regist-box {
+    background-color: rgba(0, 0, 0, 0.35);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 16px;
+    padding: 3em;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(2px);
+    width: 90%;
+    max-width: 450px;
+  }
+
+  input[type="text"],
+  input[type="password"],
+  input[type="email"] {
+    width: 100%;
+    padding: 0.8em;
+    margin: 0.5em 0;
+    border: none;
+    border-radius: 0.5em;
+    font-size: 1em;
+  }
+
+  input[type="submit"] {
+    width: 100%;
+    padding: 0.8em;
+    margin: 0.5em 0;
+    border: none;
+    border-radius: 0.5em;
+    background-color: #1ca7c6;
+    color: white;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+    font-family: "IM FELL Englisch", serif;
+  }
+
+  input[type="submit"]:hover {
+    background-color: #1c6f82;
+    transform: scale(1.02);
+  }
+
+  /* Design für die Avatare */
+  .avatar-auswahl {
+    display: flex;
+    justify-content: center;
+    gap: 1em;
+    margin: 1em 0;
+    flex-wrap: wrap;
+  }
+
+  .avatar-auswahl label {
+    cursor: pointer;
+    border: 3px solid transparent;
+    border-radius: 10px;
+    transition: border-color 0.3s;
+  }
+
+  .avatar-auswahl img {
+    width: 100px;
+    height: 100px;
+    border-radius: 10px;
+  }
+
+  .avatar-auswahl input[type="radio"] {
+    display: none;
+  }
+
+  .avatar-auswahl input[type="radio"]:checked + img {
+    border: 3px solid #1ca7c6;
+  }
+
+  p {
+    text-align: center;
+  }
+
+  /* Smartphones */
+  @media (max-width: 600px) {
+    .regist-box {
+      width: 90%;
+      padding: 1.5em;
+    }
+
+    h1 {
+      font-size: 1.4em;
+    }
+
+    input[type="text"],
+    input[type="password"],
+    input[type="email"],
+    input[type="submit"] {
+      font-size: 0.9em;
+      padding: 0.6em;
+    }
+
+    .avatar-auswahl {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .avatar-auswahl img {
+      width: 80px;
+      height: 80px;
+    }
+  }
+
+  /* Tablets */
+  @media (min-width: 601px) and (max-width: 1024px) {
+    .regist-box {
+      width: 80%;
+      max-width: 500px;
+      padding: 2em;
+    }
+
+    h1 {
+      font-size: 1.8em;
+    }
+
+    input[type="text"],
+    input[type="password"],
+    input[type="email"],
+    input[type="submit"] {
+      font-size: 1em;
+      padding: 0.7em;
+    }
+
+    .avatar-auswahl {
+      gap: 1.5em;
+    }
+
+    .avatar-auswahl img {
+      width: 90px;
+      height: 90px;
+    }
+  }
+
+  /* Desktop */
+  @media (min-width: 1025px) {
+    .regist-box {
+      width: 70%;
+      max-width: 500px;
+      padding: 3em;
+    }
+
+    h1 {
+      font-size: 2.2em;
+    }
+
+    input[type="text"],
+    input[type="password"],
+    input[type="email"],
+    input[type="submit"] {
+      font-size: 1.05em;
+      padding: 0.8em;
+    }
+
+    .avatar-auswahl img {
+      width: 110px;
+      height: 110px;
+    }
+  }
+</style>
+
+<script>
+  document.getElementById("registerForm").addEventListener("submit", async function (event) {
+  event.preventDefault();
+
+  // Formular-Daten sammeln
+  const firstname = document.getElementById("prename").value.trim();
+  const surname = document.getElementById("surname").value.trim();
+  const username = document.getElementById("nutzername").value.trim();
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value.trim();
+  
+  // Avatar-Auswahl
+  const selectedAvatar = document.querySelector('input[name="avatar"]:checked');
+  const avatarFile = selectedAvatar ? selectedAvatar.value : 'avatar1.jpeg';
+
+  // Validierung
+  if (!firstname || !surname || !username || !email || !password) {
+    alert("Bitte alle Felder ausfüllen!");
+    return;
+  }
+
+  if (password.length < 5) {
+    alert("Das Passwort muss mindestens 5 Zeichen haben!");
+    return;
+  }
+
+  if (username.length < 3) {
+    alert("Der Benutzername muss mindestens 3 Zeichen haben!");
+    return;
+  }
+
+  try {
+    // Avatar ID aus der Datenbank ermitteln (vereinfacht über den Dateinamen)
+    let avatar_id = 31; // Standardwert
+    if (avatarFile === 'avatar2.jpeg') avatar_id = 32;
+    if (avatarFile === 'avatar3.jpeg') avatar_id = 33;
+
+    // Registrierungsdaten
+    const registrationData = {
+      firstname,
+      surname,
+      username,
+      email,
+      password,
+      avatar_id
+    };
+
+    console.log('Registrierungsdaten:', registrationData);
+
+    // API-Aufruf für Registrierung
+    const response = await fetch('/api/register', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(registrationData)
+    });
+
+    const result = await response.json();
+
+    if (response.ok) {
+      // Registrierung erfolgreich
+      alert("Registrierung erfolgreich! Sie werden weitergeleitet...");
+      
+      // Benutzerdaten für spätere Verwendung speichern
+      localStorage.setItem('registeredUser', JSON.stringify({
+        firstname,
+        surname,
+        username,
+        email,
+        avatar: avatarFile,
+        userId: result.userId
+      }));
+      
+      // Weiterleitung nach erfolgreicher Registrierung
+      window.location.href = "ISEF01_Login.html";
+      
+    } else {
+      // Registrierung fehlgeschlagen
+      alert("Registrierung fehlgeschlagen: " + (result.error || "Unbekannter Fehler"));
+    }
+
+  } catch (error) {
+    console.error('Registrierung Fehler:', error);
+    
+    // Fallback: Demo-Speicherung
+    alert("Server nicht verfügbar. Daten werden lokal gespeichert (Demo-Modus).");
+    
+    localStorage.setItem('registeredUser', JSON.stringify({
+      firstname,
+      surname,
+      username,
+      email,
+      avatar: avatarFile,
+      userId: 'demo_' + Date.now()
+    }));
+    
+    localStorage.setItem('demoProfile', JSON.stringify({
+      prename: firstname,
+      surname: surname,
+      username: username,
+      email: email,
+      avatar: avatarFile
+    }));
+    
+    window.location.href = "ISEF01_Login.html";
+  }
+});
+</script>

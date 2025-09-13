@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="de">
+    <head>
+        <meta charset="UTF-8">
+        <title>Frage 2</title>
+    </head>
+
+    <body>
+        <header>
+            <div class="right-nav">
+            <a href="ISEF01_Karte.html">X</a>
+            </div>
+            <div class="nav-left">
+            <span id="coin-display">Münzen: <strong id="coins">0</strong> 🪙</span>
+            </div>
+        </header>
+        <main>
+            <h1>Frage 2</h1> <br>
+            <br>
+            <br>
+            <div class="question-box">
+                <p>Was ist das Ergebnis von 10 ÷ 2?</p>
+                <!-- Hinweis ob Frage richtig oder falsch -->
+                <p id="hint" class="hint" style="display:none;"></p>
+                <div class="answer">
+                    <button onclick="checkAnswer(this, false)">2</button>
+                    <button onclick="checkAnswer(this, false)">10</button>
+                    <button onclick="checkAnswer(this, true)">5</button>
+                    <button onclick="checkAnswer(this, false)">20</button>
+                </div>
+                    <a id="next-button" class="next-btn" href="ISEF01_Frage3.html">Nächste Frage</a>
+            </div>
+        </main>
+
+        <!-- Chat-Button -->
+        <button id="chat-toggle">💬 Chat</button>
+
+        <!-- Chat-Fenster -->
+        <div id="chat-window">
+          <div id="chat-header">Spieler-Chat
+            <span id="chat-close">✖</span>
+          </div>
+          <div id="chat-messages"></div>
+          <div id="chat-input-box">
+            <input type="text" id="chat-input" placeholder="Nachricht eingeben...">
+            <button id="chat-send">➤</button>
+          </div>
+        </div>
+
+    </body>
+
+    <footer>
+        <!--untere Navigation (Logout, AGBs etc.)-->
+            <div class="bottom-nav">
+                <a href="ISEF01_Login.html">Logout</a>
+                <a href="ISEF01_Nutzerprofil.html">Profil &amp; Einstellungen</a>
+                <a href="ISEF01_Bibliothek.html">Fragenkatalog</a>
+                <a href="ISEF01_AGB.html">AGB &amp; Impressum</a>
+            </div>
+    </footer>
+</html>
+
+<style>
+  .right-nav {
+      text-align: right;
+      padding: 12px 16px;
+      font-family: "IM FELL Englisch", serif;
+      font-size: larger;
+      margin-right: 50px;
+      margin-top: 20px;
+  }
+  
+  .right-nav a {
+      color: white;
+      text-decoration: none;
+  }
+  
+  .right-nav a:hover {
+      color: #ffffff;
+  }   
+  
+  .nav-left {
+      margin-left: 50px;
+      color: white;
+      font-family: "IM FELL Englisch", serif;
+  }
+  
+  main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+  }
+  
+  html,body {
+      height: 100%;
+      margin: 0;
+  }   
+  
+  body {
+      background-image: url("Die Haifischbucht.jpeg");
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      font-family: "IM FELL Englisch", serif;
+      height: 100%;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+  }
+  
+  h1 {
+      font-family: "IM FELL Englisch", serif;
+      font-size: 50px;
+      color: white;
+      text-align: left;   
+      font-weight: 5;
+      margin-top: 50px;
+      -webkit-text-stroke-width: 0.5px;
+      -webkit-text-stroke-color: black;
+  }
+  
+  /*Fragebox*/
+  .question-box {
+      text-align: center;
+      background: rgba(255,255,255,0.9);
+      padding: 20px;
+      border-radius: 12px;
+      max-width: 900px;
+      width: 100%;
+      color: #000000;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+  } 
+  
+  .question-box p {
+      font-size: 1.4em;
+      margin-bottom: 25px;
+  }
+  
+  /*Antworten*/
+  .answer {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+      justify-items: center;
+      width: 100%;
+  }
+  
+  .answer button {
+      background-color: #1ca7c6;
+      border: none;
+      border-radius: 8px;
+      color: white;
+      padding: 15px;
+      font-size: 1.2em;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+      width: 100%;
+      max-width: none;
+      font-family: "IM FELL Englisch", serif;
+  }
+  .answer button:hover { transform: scale(1.05); }
+  .answer button:disabled { cursor: not-allowed; }
+  
+  /*Nächste Frage-Button*/
+  .next-btn{
+      display: none; 
+      margin-top: 20px;
+      padding: 12px 24px;
+      font-size: 1.2em;
+      background-color: #1ca7c6;
+      color: white;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: background-color 0.2s ease, transform 0.2s ease;
+  }
+  .next-btn:hover { 
+    background-color: #1c6f82; 
+    transform: scale(1.05); }
+  
+  /* Hinweise */
+  .hint {
+      margin-top: 10px;
+      font-size: 1.05em;
+      padding: 10px 12px;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  }
+  .hint-correct {
+      background: rgba(76, 175, 80, 0.15);
+      border: 1px solid #4CAF50;
+      color: #1b5e20;
+  }
+  .hint-wrong {
+      background: rgba(217, 83, 79, 0.12);
+      border: 1px solid #d9534f;
+      color: #7a1f1c;
+  }
+  
+  /* Chat */
+  #chat-toggle {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: #1ca7c6;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    font-size: 1.5em;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    font-family: "IM FELL Englisch", serif;
+  }
+  
+  #chat-toggle:hover { 
+    background: #1c6f82; 
+  }
+  
+  #chat-window {
+    display: none;
+    position: fixed;
+    bottom: 90px;
+    right: 20px;
+    width: 300px;
+    height: 400px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.4);
+    overflow: hidden;
+    flex-direction: column;
+  }
+  #chat-header {
+    background: #1ca7c6;
+    color: white;
+    padding: 10px;
+    font-weight: bold;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  #chat-close { cursor: pointer; }
+  #chat-messages {
+    flex: 1;
+    padding: 10px;
+    overflow-y: auto;
+    font-family: "IM FELL Englisch", serif;
+    font-size: 0.9em;
+  }
+  #chat-input-box {
+    display: flex;
+    border-top: 1px solid #ddd;
+  }
+  #chat-input {
+    flex: 1;
+    border: none;
+    padding: 10px;
+    font-size: 1em;
+  }
+  #chat-input:focus { outline: none; }
+  #chat-send {
+    background: #1ca7c6;
+    border: none;
+    color: white;
+    padding: 10px 15px;
+    cursor: pointer;
+  }
+  #chat-send:hover { 
+    background: #1c6f82; 
+  }
+  
+  .chat-message {
+    margin: 5px 0;
+    padding: 6px 10px;
+    border-radius: 8px;
+    max-width: 80%;
+  }
+  .chat-self {
+    background: #d1e7dd;
+    align-self: flex-end;
+  }
+  .chat-other {
+    background: #f8d7da;
+    align-self: flex-start;
+  }
+  
+  /* Position und Design untere Navigation */
+  
+  footer {
+    margin-top: auto;
+    padding-top: 16px;
+    padding-bottom: 16px;
+    font-family: "IM FELL Englisch", serif;
+    font-size: larger;
+  }
+  
+  .bottom-nav {
+    width: 100%;
+    display: flex;
+    justify-content: space-evenly;
+    font-size: 1.2em;
+  }
+  
+  .bottom-nav a {
+    color: white;
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  
+  .bottom-nav a:hover {
+    color: #cccccc;
+  }
+  
+  
+  /* Smartphones (bis 600px) */
+  @media (max-width: 600px) {
+    body {
+      padding-left: 15px;
+      padding-right: 15px;
+      font-size: 0.9em;
+    }
+  
+    h1 {
+      font-size: 2rem !important;
+      margin-top: 30px;
+      text-align: center;
+    }
+  
+    .question-box {
+      padding: 16px;
+      font-size: 1em;
+    }
+  
+    .bottom-nav {
+      font-size: 14px;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      padding-left: 15px;
+      padding-right: 15px;
+    }
+  
+    footer {
+      margin-bottom: 20px;
+    }
+  }
+  
+  /* Tablets (601px – 1024px) */
+  @media (min-width: 601px) and (max-width: 1024px) {
+    body {
+      padding-left: 30px;
+      padding-right: 30px;
+      font-size: 1em;
+    }
+  
+    h1 {
+      font-size: 2.5rem !important;
+      margin-top: 40px;
+      text-align: center;
+    }
+  
+    .question-box {
+      padding: 20px;
+      font-size: 1.1em;
+    }
+  
+    .bottom-nav {
+      font-size: 18px;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+  
+    footer {
+      margin-bottom: 30px;
+    }
+  }
+  
+  /* Desktop (ab 1025px) */
+  @media (min-width: 1025px) {
+    body {
+      padding-left: 40px;
+      padding-right: 40px;
+      font-size: 1.05em;
+    }
+  
+    h1 {
+      font-size: 3rem !important;
+      margin-top: 60px;
+    }
+  
+    .question-box {
+      padding: 24px;
+      font-size: 1.2em;
+    }
+  
+    .bottom-nav {
+      font-size: 20px;
+      gap: 30px;
+    }
+  
+    footer {
+      margin-bottom: 50px;
+    }
+  }
+  </style>
+
+<script>
+
+// Konfiguration der Seite
+  const QUESTION_ID = "Q2";           
+  const IS_FIRST_QUESTION = false;    
+  const IS_RESULTS_PAGE = false;      
+
+
+// Münzen-Logik (Zählen der Münzen)
+const COINS_KEY = "coins";
+
+function getCoins() {
+  const v = parseInt(localStorage.getItem(COINS_KEY) || "0", 10);
+  return isNaN(v) ? 0 : v;
+}
+function setCoins(v) {
+  localStorage.setItem(COINS_KEY, String(v));
+  const coinsEl = document.getElementById("coins");
+  if (coinsEl) coinsEl.textContent = String(v);
+}
+function addCoins(n = 1) {
+  setCoins(getCoins() + n);
+}
+
+
+// Pro Frage gibt es maximal 1 Münze
+const AWARD_FLAG_KEY = "awarded:" + QUESTION_ID;
+function addCoinOnceForThisQuestion() {
+  if (!QUESTION_ID) return false;
+  if (localStorage.getItem(AWARD_FLAG_KEY) === "1") return false;
+  addCoins(1);
+  localStorage.setItem(AWARD_FLAG_KEY, "1");
+  return true;
+}
+
+
+// Münzen werden bei einem neuen Quiz zurückgesetzt
+function resetQuizProgress() {
+  localStorage.setItem(COINS_KEY, "0");
+  const keys = Object.keys(localStorage);
+  for (const k of keys) {
+    if (k.startsWith("awarded:")) localStorage.removeItem(k);
+  }
+}
+
+// Antwort wird überprüft und ein Hinweis angezeigt
+function checkAnswer(button, isCorrect) {
+  const buttons = document.querySelectorAll(".answer button");
+  const nextbutton = document.getElementById("next-button");
+  const hintEl = document.getElementById("hint");
+  const correctBtn = document.querySelector('.answer button[onclick*="true"]');
+  const correctText = correctBtn ? correctBtn.textContent.trim() : "";
+
+  buttons.forEach(btn => { btn.disabled = true; btn.style.opacity = "0.8"; });
+
+  if (isCorrect) {
+    button.style.backgroundColor = "#4CAF50";
+    addCoinOnceForThisQuestion();
+
+    if (hintEl) {
+      hintEl.style.display = "block";
+      hintEl.textContent = "✅ Richtig! Du hast eine Goldmünze verdient.";
+      hintEl.classList.remove("hint-wrong");
+      hintEl.classList.add("hint-correct");
+    }
+  } else {
+    button.style.backgroundColor = "#d9534f";
+    if (hintEl) {
+      hintEl.style.display = "block";
+      hintEl.textContent = correctText
+        ? `ℹ️ Hinweis: Die richtige Antwort ist ${correctText}.`
+        : "ℹ️ Hinweis: Die richtige Antwort ist die grün markierte Option.";
+      hintEl.classList.remove("hint-correct");
+      hintEl.classList.add("hint-wrong");
+    }
+  }
+  if (nextbutton) nextbutton.style.display = "inline-block";
+}
+
+// Initialisierung
+document.addEventListener("DOMContentLoaded", () => {
+if (IS_FIRST_QUESTION) resetQuizProgress();
+setCoins(getCoins());
+if (IS_RESULTS_PAGE) showTotalOnResults();
+
+// Chat nur bei Multiplayer zeigen
+const isMultiplayer = localStorage.getItem("multiplayer") === "true";
+if (isMultiplayer) {
+document.getElementById("chat-toggle").style.display = "block";
+}
+});
+
+
+// Chat-Funktionalität
+const chatToggle = document.getElementById("chat-toggle");
+const chatWindow = document.getElementById("chat-window");
+const chatClose = document.getElementById("chat-close");
+const chatMessages = document.getElementById("chat-messages");
+const chatInput = document.getElementById("chat-input");
+const chatSend = document.getElementById("chat-send");
+
+chatToggle.addEventListener("click", () => {
+  chatWindow.style.display = "flex";
+});
+chatClose.addEventListener("click", () => {
+  chatWindow.style.display = "none";
+});
+function addMessage(text, self = true) {
+  const msg = document.createElement("div");
+  msg.classList.add("chat-message", self ? "chat-self" : "chat-other");
+  msg.textContent = text;
+  chatMessages.appendChild(msg);
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+chatSend.addEventListener("click", () => {
+  if (chatInput.value.trim() !== "") {
+    addMessage(chatInput.value, true);
+    chatInput.value = "";
+  }
+});
+chatInput.addEventListener("keypress", (e) => {
+  if (e.key === "Enter") chatSend.click();
+});
+
+</script>
+    

@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html lang="de">
+    <head>
+    <meta charset="UTF-8">
+        <title>Profil & Einstellungen</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+
+
+    <body>
+        <header>
+            <div class="top-nav">
+            <a href="ISEF01_Karte.html">Zurück zur Startseite</a>
+            </div>
+        </header>
+         
+        <div class="content">
+            <!--Avatar-Sektion-->
+            <div class="avatar-container" id="chooseAvatar">
+                <img id="currentAvatar" src="avatar1.jpeg" alt="Avatar">
+                <p>Avatar ändern</p>
+                <small class="hint" id="avatarHint">lädt...</small>
+                <small class="error" id="avatarError" style="display:none;"></small>
+            </div>
+    
+            <!--Profildaten-Formular-->
+            <div class="user-profil">
+                <h1>Profil & Einstellungen</h1>
+                <form id="user-profil" method="POST" action="/user-profil">
+                    <div class="form-group">
+                        <label for="prename">Vorname</label>
+                        <input type="text" id="prename" name="prename" placeholder="Vorname eingeben" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="surname">Nachname</label>
+                        <input type="text" id="surname" name="surname" placeholder="Nachname eingeben" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="username">Benutzername</label>
+                        <input type="text" id="username" name="username" placeholder="Benutzername eingeben" required minlength="3">
+                        <small class="field-hint">Mindestens 3 Zeichen</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">E-Mail-Adresse</label>
+                        <input type="email" id="email" name="email" placeholder="E-Mail eingeben" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="password">Neues Passwort</label>
+                        <input type="password" id="password" name="password" placeholder="Neues Passwort eingeben" minlength="8">
+                        <small class="field-hint">Mindestens 8 Zeichen (leer lassen, um beizubehalten)</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="confirm-password">Passwort bestätigen</label>
+                        <input type="password" id="confirm-password" name="confirm-password" placeholder="Passwort wiederholen">
+                    </div>
+                    
+                    <div class="form-buttons">
+                        <button type="submit" class="save-btn">
+                            <span class="btn-text">Änderungen speichern</span>
+                            <span class="btn-loading" style="display: none;">Speichere...</span>
+                        </button>
+                        <button type="reset" class="reset-btn">Zurücksetzen</button>
+                    </div>
+                    
+                    <div class="form-message" id="formMessage" style="display: none;"></div>
+                </form>
+            </div>
+        </div>
+            
+        <footer>
+            <!--untere Navigation (Logout, AGBs etc.)-->
+            <div class="bottom-nav">
+                <a href="ISEF01_Login.html">Logout</a>
+                <a href="ISEF01_Nutzerprofil.html">Profil &amp; Einstellungen</a>
+                <a href="ISEF01_Bibliothek.html">Fragenkatalog</a>
+                <a href="ISEF01_AGB.html">AGB &amp; Impressum</a>
+            </div>
+        </footer>
+
+        <!-- Popup zur Avatar-Auswahl -->
+        <div class="avatar-popup" id="avatarPopup">
+            <div class="avatar-popup-content">
+                <h3>Wähle deinen Avatar</h3>
+                <div class="avatar-grid">
+                    <img src="avatar1.jpeg" alt="Avatar 1" data-avatar="avatar1.jpeg">
+                    <img src="avatar2.jpeg" alt="Avatar 2" data-avatar="avatar2.jpeg">
+                    <img src="avatar3.jpeg" alt="Avatar 3" data-avatar="avatar3.jpeg">
+                </div>
+                <div class="popup-buttons">
+                    <button class="close-btn" id="closePopup">Abbrechen</button>
+                </div>
+            </div>
+        </div>
+    </body>
+
+</html>
+
+<style>
+
+.top-nav {
+    text-align: right;
+    padding: 12px 16px;
+    font-family: "IM FELL Englisch", serif;
+    font-size: larger;
+    margin-right: 50px;
+    margin-top: 20px;
+}
+
+.top-nav a {
+    color: white;
+    text-decoration: none;
+}
+
+.top-nav a:hover {
+    color: #ffffff;
+}   
+
+html,body {
+    height: 100%;
+    margin: 0;
+}
+
+body {
+     min-height: 100vh;
+     display: flex;
+     flex-direction: column;
+     font-family: "IM FELL Englisch", serif;
+     color: white;
+     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+     background-image: url("Die Schatzinsel2.jpeg");
+     background-size: cover;
+     background-position: center;
+     background-repeat: no-repeat;
+     background-attachment: fixed;
+}
+
+.content {
+    flex: 1;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 20px;
+    gap: 40px;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+}
+    
+.user-profil {
+    background: rgba(255, 255, 255, 0.95);
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    color: #333;
+    text-shadow: none;
+    flex: 1;
+    max-width: 500px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
+    color: #444;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    box-sizing: border-box;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #4CAF50;
+    box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+}
+
+.form-group input:invalid {
+    border-color: #f44336;
+}
+
+.field-hint {
+    display: block;
+    margin-top: 4px;
+    font-size: 12px;
+    color: #666;
+    font-style: italic;
+}
+
+.form-buttons {
+    display: flex;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+.save-btn, .reset-btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    flex: 1;
+    font-family: "IM FELL Englisch", serif;
+}
+
+.save-btn {
+    background: linear-gradient(135deg, #1ca7c6, #1ca7c7); /* ermöglicht Farbverlauf des Buttons */
+    color: white;
+}
+
+.save-btn:hover {
+    background: linear-gradient(135deg, #1c6f82, #1c6f83); /* ermöglicht Farbverlauf des Buttons */
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(76, 175, 80, 0.3);
+}
+
+.save-btn:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.reset-btn {
+    background: #f5f5f5;
+    color: #666;
+    border: 2px solid #ddd;
+}
+
+.reset-btn:hover {
+    background: #eeeeee;
+    border-color: #bbb;
+}
+
+.form-message {
+    margin-top: 15px;
+    padding: 12px;
+    border-radius: 8px;
+    text-align: center;
+    font-weight: 600;
+}
+
+.form-message.success {
+    background: rgba(76, 175, 80, 0.1);
+    border: 2px solid #4CAF50;
+    color: #2e7d32;
+}
+
+.form-message.error {
+    background: rgba(244, 67, 54, 0.1);
+    border: 2px solid #f44336;
+    color: #c62828;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 30px;
+    color: #2c3e50;
+    font-size: 28px;
+}
+
+/*Position und Design untere Navigation*/
+footer {
+    padding: 16px 0;
+    font-family: "IM FELL Englisch", serif;
+    margin-bottom: 50px;
+    font-size: larger;
+}
+.bottom-nav {
+    width: 100%;
+    display: flex;
+    justify-content: space-evenly;
+    font-size: 1.2em;
+}
+.bottom-nav a {
+    color: white;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+.botton-nav a:hover { color: #ccc; }
+
+/*Avatar Design*/
+.avatar-container {
+    text-align: center;
+    cursor: pointer;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    backdrop-filter: blur(10px);
+    transition: transform 0.3s ease;
+}
+
+.avatar-container:hover {
+    transform: translateY(-5px);
+}
+
+.avatar-container img {
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    border: 4px solid white;
+    object-fit: cover;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    transition: transform 0.3s ease;
+}
+
+.avatar-container img:hover {
+    transform: scale(1.05);
+}
+
+.avatar-container p {
+    margin-top: 15px;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.hint {
+    font-size: 14px;
+    opacity: 0.8;
+    display: block;
+    margin-top: 5px;
+}
+
+.error {
+    color: #ffeb3b;
+    margin-top: 8px;
+    display: block;
+    font-weight: 600;
+}
+
+/*Avatar Popup*/
+.avatar-popup {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    background: rgba(0, 0, 0, 0.8);
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(5px);
+}
+
+.avatar-popup-content {
+    background: rgba(0, 0, 0, 0.35);
+    color: white;
+    padding: 30px;
+    border-radius: 20px;
+    text-align: center;
+    max-width: 500px;
+    width: 90%;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+.avatar-popup-content h3 {
+    margin-bottom: 25px;
+    color: #ffffff;
+    font-size: 24px;
+}
+
+.avatar-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.avatar-popup-content img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 3px solid transparent;
+    transition: all 0.3s ease;
+    object-fit: cover;
+}
+
+.avatar-popup-content img:hover {
+    transform: scale(1.1);
+    border-color: #1ca7c6;
+    box-shadow: 0 5px 20px rgba(76, 175, 80, 0.4);
+}
+
+.popup-buttons {
+    display: flex;
+    justify-content: center;
+}
+
+.close-btn {
+    background: #f44336;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.close-btn:hover {
+    background: #d32f2f;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(244, 67, 54, 0.3);
+}
+
+/* 📱 Design für Smartphones */
+@media (max-width: 768px) {
+    .top-nav {
+        margin-right: 20px;
+        margin-top: 15px;
+        font-size: 16px;
+    }
+
+    .content {
+        flex-direction: column;
+        padding: 15px;
+        gap: 20px;
+        align-items: center;
+    }
+
+    .user-profil {
+        padding: 20px;
+        width: 100%;
+        max-width: none;
+    }
+
+    h1 {
+        font-size: 22px;
+        margin-bottom: 20px;
+    }
+
+    .form-group input {
+        padding: 10px;
+        font-size: 16px; 
+    }
+
+    .form-buttons {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .avatar-container {
+        padding: 15px;
+        width: 100%;
+        max-width: 250px;
+    }
+
+    .avatar-container img {
+        width: 120px;
+        height: 120px;
+    }
+
+    .avatar-container p {
+        font-size: 16px;
+    }
+
+    .avatar-popup-content {
+        padding: 20px;
+        width: 95%;
+    }
+
+    .avatar-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+
+    .avatar-popup-content img {
+        width: 80px;
+        height: 80px;
+    }
+
+    .bottom-nav {
+        font-size: 14px;
+        flex-wrap: wrap;
+        gap: 10px;
+        justify-content: center;
+        padding: 0 15px;
+    }
+
+    footer {
+        margin-bottom: 20px;
+    }
+}
+
+/* 📲 Design für Tablets */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .top-nav {
+        margin-right: 30px;
+        font-size: 18px;
+    }
+
+    .content {
+        flex-direction: column;
+        padding: 20px;
+        gap: 30px;
+        align-items: center;
+    }
+
+    .user-profil {
+        padding: 25px;
+        width: 100%;
+        max-width: 600px;
+    }
+
+    h1 {
+        font-size: 26px;
+    }
+
+    .avatar-container {
+        padding: 18px;
+        max-width: 300px;
+    }
+
+    .avatar-container img {
+        width: 150px;
+        height: 150px;
+    }
+
+    .avatar-popup-content {
+        padding: 25px;
+        max-width: 450px;
+    }
+
+    .avatar-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+    }
+
+    .avatar-popup-content img {
+        width: 90px;
+        height: 90px;
+    }
+
+    .bottom-nav {
+        font-size: 18px;
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+
+    footer {
+        margin-bottom: 30px;
+    }
+}
+
+/* 💻 Design für Laptops/Desktop */
+@media (min-width: 1025px) {
+    .content {
+        align-items: flex-start;
+        padding: 40px;
+        gap: 50px;
+    }
+
+    .user-profil {
+        padding: 35px;
+    }
+
+    h1 {
+        font-size: 30px;
+    }
+
+    .avatar-container {
+        padding: 25px;
+        min-width: 280px;
+    }
+
+    .avatar-container img {
+        width: 200px;
+        height: 200px;
+    }
+
+    .avatar-container p {
+        font-size: 20px;
+    }
+
+    .bottom-nav {
+        font-size: 20px;
+        gap: 30px;
+    }
+
+    footer {
+        margin-bottom: 50px;
+    }
+}
+
+</style>
+
+<script>
+// >>> Konfiguration
+const API_GET_PROFILE   = '/api/profile';
+const API_PATCH_PROFILE = '/api/profile';
+
+// DOM Elemente
+const avatarDisplay = document.getElementById('chooseAvatar');
+const avatarPopup   = document.getElementById('avatarPopup');
+const closePopup    = document.getElementById('closePopup');
+const currentAvatar = document.getElementById('currentAvatar');
+const hintEl        = document.getElementById('avatarHint');
+const errEl         = document.getElementById('avatarError');
+const formEl        = document.getElementById('user-profil');
+const formMessage   = document.getElementById('formMessage');
+const saveBtn       = formEl.querySelector('.save-btn');
+const btnText       = saveBtn.querySelector('.btn-text');
+const btnLoading    = saveBtn.querySelector('.btn-loading');
+
+// Formular Felder
+const fields = {
+    prename: document.getElementById('prename'),
+    surname: document.getElementById('surname'),
+    username: document.getElementById('username'),
+    email: document.getElementById('email'),
+    password: document.getElementById('password'),
+    confirmPassword: document.getElementById('confirm-password')
+};
+
+// Demo-Daten für Fallback (falls kein Backend verfügbar)
+let demoProfile = {
+    prename: 'Max',
+    surname: 'Mustermann',
+    username: 'demo_user',
+    email: 'max@example.com',
+    avatar: 'avatar1.jpeg'
+};
+
+// Utility Funktionen
+function showMessage(message, type = 'success') {
+    formMessage.textContent = message;
+    formMessage.className = `form-message ${type}`;
+    formMessage.style.display = 'block';
+    setTimeout(() => {
+        formMessage.style.display = 'none';
+    }, 5000);
+}
+
+function setLoading(loading) {
+    saveBtn.disabled = loading;
+    btnText.style.display = loading ? 'none' : 'inline';
+    btnLoading.style.display = loading ? 'inline' : 'none';
+}
+
+function buildUrl(file) {
+    if (!file) return 'avatar1.jpeg';
+    return file; 
+}
+
+function setAvatarSrc(file, bustCache = false) {
+    const url = buildUrl(file);
+    const finalUrl = bustCache ? `${url}${url.includes('?') ? '&' : '?'}t=${Date.now()}` : url;
+    console.log('SET AVATAR SRC →', finalUrl);
+    currentAvatar.src = finalUrl;
+    currentAvatar.dataset.file = file;
+}
+
+// Profil laden und Formular füllen
+async function loadProfile() {
+    try {
+        hintEl.style.display = 'inline';
+        hintEl.textContent = 'lädt…';
+        errEl.style.display = 'none';
+
+        // Versuche Backend-Aufruf
+        const res = await fetch(API_GET_PROFILE, { credentials: 'include' });
+        let data;
+        
+        if (res.ok) {
+            data = await res.json();
+            console.log('Profil vom Server geladen:', data);
+        } else {
+            throw new Error('Server nicht erreichbar');
+        }
+
+        // Avatar setzen
+        const file = data.avatar || 'avatar1.jpeg';
+        setAvatarSrc(file);
+        hintEl.textContent = 'Zum Ändern anklicken';
+
+        // Formular füllen
+        if (data.prename) fields.prename.value = data.prename;
+        if (data.surname) fields.surname.value = data.surname;
+        if (data.username) fields.username.value = data.username;
+        if (data.email) fields.email.value = data.email;
+
+    } catch (e) {
+        console.log('Backend nicht verfügbar, verwende Demo-Daten:', e.message);
+        
+        // Fallback auf Demo-Daten
+        setAvatarSrc(demoProfile.avatar);
+        hintEl.textContent = 'Demo-Modus - Zum Ändern anklicken';
+        
+        fields.prename.value = demoProfile.prename;
+        fields.surname.value = demoProfile.surname;
+        fields.username.value = demoProfile.username;
+        fields.email.value = demoProfile.email;
+    }
+}
+
+// Formular Validierung
+function validateForm() {
+    const password = fields.password.value;
+    const confirmPassword = fields.confirmPassword.value;
+
+    if (password && password.length < 8) {
+        showMessage('Das Passwort muss mindestens 8 Zeichen lang sein.', 'error');
+        return false;
+    }
+
+    if (password && password !== confirmPassword) {
+        showMessage('Die Passwörter stimmen nicht überein.', 'error');
+        return false;
+    }
+
+    if (fields.username.value.length < 3) {
+        showMessage('Der Benutzername muss mindestens 3 Zeichen lang sein.', 'error');
+        return false;
+    }
+
+    return true;
+}
+
+// Profil im Demo-Modus speichern
+function saveDemoProfile(formData) {
+    // In Demo-Modus die Daten lokal speichern
+    if (formData.prename !== undefined) demoProfile.prename = formData.prename;
+    if (formData.surname !== undefined) demoProfile.surname = formData.surname;
+    if (formData.username !== undefined) demoProfile.username = formData.username;
+    if (formData.email !== undefined) demoProfile.email = formData.email;
+    if (formData.avatar !== undefined) demoProfile.avatar = formData.avatar;
+    
+    // In localStorage für Persistenz
+    localStorage.setItem('demoProfile', JSON.stringify(demoProfile));
+    
+    showMessage('Profil erfolgreich gespeichert (Demo-Modus)!', 'success');
+}
+
+// Formular absenden
+formEl.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    if (!validateForm()) return;
+
+    setLoading(true);
+    formMessage.style.display = 'none';
+
+    try {
+        const formData = {
+            prename: fields.prename.value.trim(),
+            surname: fields.surname.value.trim(),
+            username: fields.username.value.trim(),
+            email: fields.email.value.trim()
+        };
+
+        if (fields.password.value) {
+            formData.password = fields.password.value;
+        }
+
+        // Versuche Backend-Aufruf
+        const res = await fetch(API_PATCH_PROFILE, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify(formData)
+        });
+
+        if (res.ok) {
+            const data = await res.json();
+            showMessage('Profil erfolgreich aktualisiert!', 'success');
+        } else {
+            throw new Error('Server-Fehler');
+        }
+
+        fields.password.value = '';
+        fields.confirmPassword.value = '';
+
+    } catch (e) {
+        console.log('Backend nicht verfügbar, Demo-Speicherung:', e.message);
+        
+        // Fallback: Demo-Speicherung
+        saveDemoProfile({
+            prename: fields.prename.value.trim(),
+            surname: fields.surname.value.trim(),
+            username: fields.username.value.trim(),
+            email: fields.email.value.trim()
+        });
+        
+        fields.password.value = '';
+        fields.confirmPassword.value = '';
+    } finally {
+        setLoading(false);
+    }
+});
+
+// Reset Button
+formEl.addEventListener('reset', () => {
+    setTimeout(() => {
+        loadProfile();
+        formMessage.style.display = 'none';
+    }, 10);
+});
+
+// Avatar Popup
+avatarDisplay?.addEventListener('click', () => { 
+    avatarPopup.style.display = 'flex'; 
+});
+
+closePopup?.addEventListener('click', () => { 
+    avatarPopup.style.display = 'none'; 
+});
+
+avatarPopup?.addEventListener('click', (e) => { 
+    if (e.target === avatarPopup) avatarPopup.style.display = 'none'; 
+});
+
+// Avatar Auswahl
+document.querySelectorAll('.avatar-popup-content img').forEach(img => {
+    img.addEventListener('click', async () => {
+        let chosen = img.getAttribute('data-avatar');
+        if (!chosen) {
+            // Fallback: aus src extrahieren
+            const url = new URL(img.src, window.location.origin);
+            chosen = decodeURIComponent(url.pathname.split('/').pop() || 'avatar1.jpeg');
+        }
+
+        console.log('AVATAR CHOSEN →', chosen);
+
+        try {
+            hintEl.style.display = 'inline';
+            hintEl.textContent = 'speichern…';
+            errEl.style.display = 'none';
+
+            // Versuche Backend-Update
+            const res = await fetch(API_PATCH_PROFILE, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify({ avatar: chosen })
+            });
+            
+            if (res.ok) {
+                const data = await res.json();
+                const saved = (data.avatar && String(data.avatar)) || chosen;
+                setAvatarSrc(saved, true);
+                hintEl.textContent = 'Gespeichert ✓';
+                showMessage('Avatar erfolgreich geändert!', 'success');
+            } else {
+                throw new Error('Server-Fehler');
+            }
+
+        } catch (e) {
+            console.log('Backend nicht verfügbar, Demo-Avatar-Speicherung:', e.message);
+            
+            // Demo-Fallback
+            demoProfile.avatar = chosen;
+            localStorage.setItem('demoProfile', JSON.stringify(demoProfile));
+            setAvatarSrc(chosen, true);
+            hintEl.textContent = 'Gespeichert (Demo) ✓';
+            showMessage('Avatar geändert (Demo-Modus)!', 'success');
+        }
+        
+        avatarPopup.style.display = 'none';
+    });
+});
+
+// Passwort-Bestätigung Live-Validierung
+fields.confirmPassword?.addEventListener('input', () => {
+    const password = fields.password.value;
+    const confirmPassword = fields.confirmPassword.value;
+    
+    if (confirmPassword && password !== confirmPassword) {
+        fields.confirmPassword.style.borderColor = '#f44336';
+    } else {
+        fields.confirmPassword.style.borderColor = '#ddd';
+    }
+});
+
+// Demo-Profil aus localStorage laden falls vorhanden
+function loadDemoProfile() {
+    // Erst registrierte User-Daten prüfen
+    const registeredUser = localStorage.getItem('registeredUser');
+    if (registeredUser) {
+        try {
+            const userData = JSON.parse(registeredUser);
+            demoProfile = {
+                prename: userData.firstname,
+                surname: userData.surname,
+                username: userData.username,
+                email: userData.email,
+                avatar: userData.avatar || 'avatar1.jpeg'
+            };
+            console.log('Registrierte Benutzerdaten geladen:', demoProfile);
+            return;
+        } catch (e) {
+            console.log('Fehler beim Laden der registrierten Daten:', e);
+        }
+    }
+    
+    // Fallback auf gespeicherte Demo-Daten
+    const stored = localStorage.getItem('demoProfile');
+    if (stored) {
+        try {
+            demoProfile = JSON.parse(stored);
+            console.log('Demo-Profil geladen:', demoProfile);
+        } catch (e) {
+            console.log('Fehler beim Laden der Demo-Daten:', e);
+        }
+    }
+}
+
+// Initialisierung
+loadDemoProfile();
+loadProfile();
+</script>

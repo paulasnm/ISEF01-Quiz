@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="de">
+    <head> <meta charset="UTF-8">
+        <title>Passwort vergessen - Schatzinsel</title>
+    </head>
+    <body> 
+        <div class="reset-password">
+            <h1>Passwort vergessen</h1>
+            <p>Bitte gib deine Email-Adresse ein.</p>
+        <form id="resetForm">
+            <input type="email" id="email" placeholder="Email" required> <br>
+            <input type="submit" value="Zurücksetzen">
+        </form>
+        <a href="ISEF01_Login.html">Zurück zum Login</a>
+        <div class="meldung" id="meldung"></div>
+        </div>
+    </body>
+</html>
+
+<style>
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        background-image: url("Die Schatzinsel2.jpeg");
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        font-family: "IM FELL Englisch", serif;
+        color: white;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .reset-password {
+        background-color: rgba(0, 0, 0, 0.35);
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        border-radius: 16px;
+        padding: 2em;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+        backdrop-filter: blur(2px);
+        width: 90%;
+        max-width: 400px;
+        text-align: center;
+      }
+
+      h1 {
+        margin-bottom: 1em;
+      }
+
+      p {
+        margin-bottom: 1.5em;
+      }
+
+      input[type="email"] {
+        width: 100%;
+        padding: 0.8em;
+        margin: 0.5em 0;
+        border: none;
+        border-radius: 0.5em;
+        font-size: 1em;
+        box-sizing: border-box;
+      }
+
+      input[type="submit"] {
+        width: 100%;
+        padding: 0.8em;
+        margin: 0.5em 0;
+        border: none;
+        border-radius: 0.5em;
+        background-color: #1ca7c6;
+        color: white;
+        font-size: 1em;
+        cursor: pointer;
+        box-sizing: border-box;
+        font-family: "IM FELL Englisch", serif;
+        transition: background-color 0.2s ease, transform 0.2s ease;
+      }
+
+      input[type="submit"]:hover {
+        background-color: #1c6f82;
+        transform: scale(1.02);
+      }
+
+      a {
+        text-decoration: none;
+        color: #f5f5f5;
+        display: block;
+        margin-top: 1em;
+      }
+
+      a:hover {
+        text-decoration: underline;
+        color: #ffffff;
+      }
+
+      .meldung {
+        margin-top: 1em;
+        font-size: 0.9em;
+        color: #90ee90; /* grünlich für Erfolg */
+      }
+
+      .fehler {
+        margin-top: 1em;
+        font-size: 0.9em;
+        color: #ff6b6b;
+      }
+
+      /* Smartphones */
+      @media (max-width: 600px) {
+        .reset-box {
+          width: 90%;
+          padding: 1.5em;
+        }
+
+        h1 {
+          font-size: 1.4em;
+        }
+
+        input[type="email"],
+        input[type="submit"] {
+          font-size: 0.9em;
+          padding: 0.6em;
+        }
+      }
+
+      /* Tablets */
+      @media (min-width: 601px) and (max-width: 1024px) {
+        .reset-box {
+          width: 75%;
+          max-width: 450px;
+          padding: 2em;
+        }
+
+        h1 {
+          font-size: 1.8em;
+        }
+
+        input[type="email"],
+        input[type="submit"] {
+          font-size: 1em;
+          padding: 0.7em;
+        }
+      }
+
+      /* Desktop */
+      @media (min-width: 1025px) {
+        .reset-box {
+          width: 70%;
+          max-width: 500px;
+          padding: 3em;
+        }
+
+        h1 {
+          font-size: 2.2em;
+        }
+
+        input[type="email"],
+        input[type="submit"] {
+          font-size: 1.05em;
+          padding: 0.8em;
+        }
+      }
+    </style>
+
+<script>
+    document
+      .getElementById("resetForm")
+      .addEventListener("submit", function (event) {
+        event.preventDefault();
+        const email = document.getElementById("email").value.trim();
+        const meldungBox = document.getElementById("meldung");
+  
+        if (email === "") {
+          meldungBox.textContent = "Bitte gib eine gültige Email ein.";
+          meldungBox.className = "fehler";
+          return;
+        }
+  
+        // Meldung im Textfeld
+        meldungBox.textContent =
+          "Es wurde ein Link zum Zurücksetzen an Ihre Email versendet.";
+        meldungBox.className = "meldung";
+  
+        // Popup zusätzlich anzeigen
+        alert("Es wurde ein Link zum Zurücksetzen an Ihre Email versendet.");
+  
+        // Formular zurücksetzen
+        document.getElementById("resetForm").reset();
+      });
+  </script>
+  

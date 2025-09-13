@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+<meta charset="UTF-8">
+<title>Admin</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body>
+<h1>Übersicht</h1><br>
+<br>
+<ul class="admin-links">
+<li><a href="ISEF01_Nutzerverwaltung.html">Nutzerverwaltung</a></li>
+<li><a href="ISEF01_Quizverwaltung.html">Quizverwaltung</a></li>
+</ul>
+<footer>
+<!--untere Navigation (Logout, AGBs etc.)-->
+<div class="bottom-nav">
+<a href="ISEF01_Login.html">Logout</a>
+<a href="ISEF01_Nutzerverwaltung.html">Nutzerverwaltung</a>
+<a href="ISEF01_Quizverwaltung.html">Quizverwaltung</a>
+<a href="ISEF01_AGB.html">AGB &amp; Impressum</a>
+</div>
+</footer>
+</body>
+</html>
+
+<!--Gestaltung der Seite-->
+<style>
+
+body, html {
+height: 100%;
+margin: 0;
+padding: 0;
+overflow-x: hidden;
+}
+
+body {
+padding: 0 24px;
+min-height: 100vh;
+font-family: "IM FELL Englisch", serif;
+flex-direction: column;
+display: flex;
+justify-content: flex-start;
+align-items: stretch;
+color: white;
+margin: 0;
+margin-left: 20px;
+text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+background-image: url("Die Schatzinsel2.jpeg");
+background-size: cover;
+background-position: center;
+background-repeat: no-repeat;
+background-attachment: fixed;
+gap: 10px;
+}
+
+h1 {
+margin-top: 50px;
+font-size: 250% !important;
+font-weight: bold;
+text-align: center;
+font-family: "IM FELL Englisch", serif !important;
+-webkit-text-stroke-width: 0.5px;
+-webkit-text-stroke-color: black;
+
+}
+
+a {
+color: white;
+text-decoration: none;
+}
+
+a:hover {
+text-decoration: underline;
+}
+
+/* Admin-Links als transparente Buttons */
+.admin-links {
+list-style: none;
+padding: 0;
+margin: 0;
+text-align: center;
+display: flex;
+flex-direction: column;
+gap: 30px;
+width: 100%;
+align-items: center;
+}
+
+.admin-links li a {
+display: inline-block;
+padding: 20px 40px;
+font-size: 2rem;
+color: white;
+border: 2px solid rgba(255, 255, 255, 0.4);
+background: rgba(0, 0, 0, 0.4);
+border-radius: 15px;
+transition: all 0.3s ease;
+min-width: 300px;
+text-align: center;
+box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.admin-links li a:hover {
+background: rgba(255, 255, 255, 0.3);
+transform: scale(1.05);
+box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+}
+
+/*Position und Design untere Navigation*/
+footer {
+margin-top: auto;
+padding: 16px 0;
+font-family: "IM FELL Englisch", serif;
+font-size: larger;
+margin-bottom: 20px;
+}
+
+.bottom-nav {
+width: 100%;
+display: flex;
+justify-content: space-around;
+font-size: 1.2em;
+}
+
+.bottom-nav a {
+color: white;
+text-decoration: none;
+transition: color 0.2s;
+}
+
+.bottom-nav a:hover {
+color: #ccc;
+}
+
+/* Design für Smartphones (bis 600px) */
+@media (max-width: 600px) {
+body {
+padding: 0 15px;
+margin-left: 10px;
+}
+h1 {
+font-size: 2rem !important;
+margin-top: 30px;
+}
+.admin-links {
+gap: 25px;
+margin-top: 40px;
+}
+.admin-links li a {
+font-size: 1.4rem;
+padding: 18px 30px;
+min-width: 280px;
+border-radius: 12px;
+}
+.bottom-nav {
+font-size: 0.9em;
+flex-wrap: wrap;
+gap: 10px;
+justify-content: center;
+}
+.bottom-nav a {
+padding: 5px;
+}
+}
+
+/* Design für Tablets (601px bis 1024px) */
+@media (min-width: 601px) and (max-width: 1024px) {
+body {
+padding: 0 30px;
+margin-left: 15px;
+}
+h1 {
+font-size: 2.5rem !important;
+margin-top: 40px;
+}
+.admin-links {
+gap: 35px;
+margin-top: 50px;
+}
+.admin-links li a {
+font-size: 1.8rem;
+padding: 22px 45px;
+min-width: 350px;
+border-radius: 18px;
+}
+.bottom-nav {
+font-size: 1.1em;
+}
+}
+
+/* Design für Laptops/Desktop (ab 1025px) */
+@media (min-width: 1025px) {
+body {
+padding: 0 40px;
+margin-left: 25px;
+}
+h1 {
+font-size: 3rem !important;
+margin-top: 60px;
+}
+.admin-links {
+gap: 40px;
+margin-top: 60px;
+}
+.admin-links li a {
+font-size: 2.2rem;
+padding: 25px 50px;
+min-width: 400px;
+border-radius: 20px;
+}
+.bottom-nav {
+font-size: 1.3em;
+}
+}
+</style>

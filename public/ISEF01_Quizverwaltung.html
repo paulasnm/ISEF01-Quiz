@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Quizverwaltung</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body>
+  <div class="top-nav">
+    <a href="ISEF01_Admin.html">Zurück zum Hauptmenü</a>
+  </div>
+
+  <h1>Quizverwaltung</h1>
+
+  <section class="toolbar" aria-label="Werkzeuge zur Filterung und Aktualisierung">
+    <input id="search" type="search" placeholder="Nach Titel, Autor oder Tag suchen…" aria-label="Suche" />
+    <select id="statusFilter" aria-label="Status filtern">
+      <option value="all">Alle</option>
+      <option value="pending" selected>Ausstehend</option>
+      <option value="approved">Angenommen</option>
+      <option value="rejected">Abgelehnt</option>
+    </select>
+    <button id="refresh" class="btn" aria-label="Aktualisieren">Aktualisieren ↺</button>
+  </section>
+
+  <main class="list" id="list" aria-live="polite" aria-busy="false"></main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <footer>
+    <!--untere Navigation (Logout, AGBs etc.)-->
+    <div class="bottom-nav">
+      <a href="ISEF01_Login.html">Logout</a>
+      <a href="ISEF01_Nutzerverwaltung.html">Nutzerverwaltung</a>
+      <a href="ISEF01_Quizverwaltung.html">Quizverwaltung</a>
+      <a href="ISEF01_AGB.html">AGB &amp; Impressum</a>
+    </div>
+  </footer>
+</body>
+</html>
+
+<style>
+body, html {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+body {
+  padding: 0 24px;
+  min-height: 100vh;
+  font-family: "IM FELL Englisch", serif;
+  flex-direction: column;
+  display: flex;
+  justify-content: flex-start;
+  align-items: stretch;
+  color: white;
+  margin: 0;
+  margin-left: 20px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+  background-image: url("Die Schatzinsel2.jpeg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  gap: 10px;
+}
+
+.top-nav {
+  text-align: right;
+  padding: 4px 8px;
+  margin-right: 15px;
+  margin-top: 5px;
+  font-size: 0.8rem;
+}
+
+.top-nav a {
+  color: white;
+  text-decoration: none;
+}
+
+.top-nav a:hover {
+  text-decoration: underline;
+}
+
+h1 {
+  margin-top: 50px;
+  font-size: 250% !important;
+  font-weight: bold;
+  text-align: center;
+  font-family: "IM FELL Englisch", serif;
+  text-decoration: underline;
+}
+
+a {
+  color: white;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* Toolbar */
+.toolbar {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 12px;
+  align-items: center;
+  max-width: 1000px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.toolbar input[type="search"] {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.25);
+  background: rgba(0,0,0,0.35);
+  color: #fff;
+  outline: none;
+  backdrop-filter: blur(2px);
+}
+
+.toolbar select,
+.toolbar button {
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.25);
+  background: rgba(0,0,0,0.35);
+  color: #fff;
+  cursor: pointer;
+  backdrop-filter: blur(2px);
+}
+
+.toolbar button:disabled { 
+  opacity: 0.6; 
+  cursor: not-allowed; 
+}
+
+/* Kartenliste */
+.list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 28px;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.card {
+  background: rgba(0,0,0,0.35);
+  border: 1px solid rgba(255,255,255,0.25);
+  border-radius: 16px;
+  padding: 16px;
+  display: grid;
+  grid-template-rows: auto auto 1fr auto;
+  gap: 10px;
+  backdrop-filter: blur(2px);
+  transition: transform .15s ease, box-shadow .15s ease;
+}
+
+.card:hover { 
+  transform: translateY(-3px); 
+  box-shadow: 0 10px 20px rgba(0,0,0,.25); 
+}
+
+.card h3 {
+  margin: 0;
+  font-size: clamp(1.2rem, 2.2vw, 1.6rem);
+}
+
+.meta {
+  font-size: 0.9rem;
+  opacity: 0.9;
+  display: grid;
+  gap: 2px;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.tag {
+  border: 1px solid rgba(255,255,255,0.25);
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-size: 0.85rem;
+  background: rgba(0,0,0,0.25);
+  white-space: nowrap;
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: flex-end;
+  margin-top: 12px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.25);
+  background: rgba(0,0,0,0.35);
+  color: #fff;
+  padding: 10px 12px;
+  cursor: pointer;
+  user-select: none;
+  transition: transform .08s ease, background .15s ease;
+  font-family: "IM FELL Englisch", serif;
+}
+
+.btn:active { 
+  transform: translateY(1px); 
+}
+
+.btn-accept { 
+  border-color: rgba(0,255,0,0.35); 
+}
+
+.btn-reject { 
+  border-color: rgba(255,0,0,0.35); 
+}
+
+.status {
+  font-size: 0.9rem;
+  margin-right: auto;
+  opacity: 0.9;
+}
+
+.status[data-status="pending"] { 
+  color: #ffd27d; 
+}
+
+.status[data-status="approved"] { 
+  color: #7dff9a; 
+}
+
+.status[data-status="rejected"] { 
+  color: #ff8a7d; 
+}
+
+/* Toast */
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  transform: translateX(-50%);
+  background: rgba(0,0,0,0.8);
+  border: 1px solid rgba(255,255,255,0.25);
+  color: #fff;
+  padding: 12px 16px;
+  border-radius: 12px;
+  z-index: 9999;
+  display: none;
+}
+
+/*Position und Design untere Navigation*/
+footer {
+  margin-top: auto;
+  padding: 16px 0;
+  font-family: "IM FELL Englisch", serif;
+  font-size: larger;
+  margin-bottom: 20px;
+}
+
+.bottom-nav {
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  font-size: 1.2em;
+}
+
+.bottom-nav a {
+  color: white;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.bottom-nav a:hover {
+  color: #ccc;
+}
+
+/* Design für Smartphones (bis 600px) */
+@media (max-width: 600px) {
+  body {
+    padding: 0 15px;
+    margin-left: 10px;
+  }
+  h1 {
+    font-size: 2rem !important;
+    margin-top: 30px;
+  }
+  .toolbar { 
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  .list {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  .bottom-nav {
+    font-size: 0.9em;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+  }
+  .bottom-nav a {
+    padding: 5px;
+  }
+}
+
+/* Design für Tablets (601px bis 1024px) */
+@media (min-width: 601px) and (max-width: 1024px) {
+  body {
+    padding: 0 30px;
+    margin-left: 15px;
+  }
+  h1 {
+    font-size: 2.5rem !important;
+    margin-top: 40px;
+  }
+  .toolbar {
+    grid-template-columns: 1fr auto auto;
+  }
+  .list {
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 24px;
+  }
+  .bottom-nav {
+    font-size: 1.1em;
+  }
+}
+
+/* Design für Laptops/Desktop (ab 1025px) */
+@media (min-width: 1025px) {
+  body {
+    padding: 0 40px;
+    margin-left: 25px;
+  }
+  h1 {
+    font-size: 3rem !important;
+    margin-top: 60px;
+  }
+  .toolbar {
+    grid-template-columns: 1fr auto auto;
+  }
+  .list {
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 28px;
+  }
+  .bottom-nav {
+    font-size: 1.3em;
+  }
+}
+</style>
+
+<script>
+    /**
+     * HINWEIS ZUR BACKEND-ANBINDUNG
+     * ------------------------------------------------------------
+     * - Laden der eingereichten (ausstehenden) Quizzes: GET /api/quizzes?status=pending
+     * - Annehmen:  POST /api/quizzes/{id}/approve
+     * - Ablehnen:  POST /api/quizzes/{id}/reject   (optional: Grund im Body)
+     *
+     * Die fetch-Aufrufe sind unten bereits vorbereitet (auskommentiert) und
+     * können direkt mit eurer API verbunden werden. Für die Demo wird lokal
+     * mit Mock-Daten gearbeitet (localStorage als Cache), sodass die Seite
+     * ohne Backend funktioniert.
+     */
+
+    const listEl = document.getElementById('list');
+    const searchEl = document.getElementById('search');
+    const statusFilterEl = document.getElementById('statusFilter');
+    const refreshEl = document.getElementById('refresh');
+    const toastEl = document.getElementById('toast');
+
+    /** Mock-/Demo-Daten (können entfernt werden, wenn API steht) */
+    const demoData = [
+      { id: 'qz_001', title: 'Allgemeinwissen – Basics', author: 'Lena M.', createdAt: '2025-08-18', questions: 10, tags: ['Allgemein', 'Einsteiger'], status: 'pending' },
+      { id: 'qz_002', title: 'Literatur: Die Schatzinsel', author: 'Max M.', createdAt: '2025-08-19', questions: 12, tags: ['Literatur', 'Abenteuer'], status: 'pending' },
+      { id: 'qz_003', title: 'Mathe-Kopftraining', author: 'S. Kaya', createdAt: '2025-08-20', questions: 8, tags: ['Mathe'], status: 'approved' },
+      { id: 'qz_004', title: 'Filmzitate-Quiz', author: 'R. Vogel', createdAt: '2025-08-21', questions: 15, tags: ['Film', 'Zitate'], status: 'rejected' },
+    ];
+
+    function loadFromLocal() {
+      const raw = localStorage.getItem('quiz_admin_demo');
+      if (raw) return JSON.parse(raw);
+      localStorage.setItem('quiz_admin_demo', JSON.stringify(demoData));
+      return demoData;
+    }
+
+    function saveToLocal(data) {
+      localStorage.setItem('quiz_admin_demo', JSON.stringify(data));
+    }
+
+    /**
+     * Backend-Version (Beispiel):
+     * async function fetchQuizzes() {
+     *   const url = `/api/quizzes?status=${encodeURIComponent(statusFilterEl.value === 'all' ? '' : statusFilterEl.value)}`;
+     *   const res = await fetch(url);
+     *   if (!res.ok) throw new Error('Fehler beim Laden');
+     *   return await res.json();
+     * }
+     */
+
+    /** Rendering **/
+    function render(quizzes) {
+      listEl.innerHTML = '';
+      if (!quizzes.length) {
+        const empty = document.createElement('div');
+        empty.className = 'card';
+        empty.innerHTML = '<p>Keine Einträge gefunden.</p>';
+        listEl.appendChild(empty);
+        return;
+      }
+
+      for (const q of quizzes) {
+        const card = document.createElement('article');
+        card.className = 'card';
+        card.setAttribute('data-id', q.id);
+
+        const tags = (q.tags || []).map(t => `<span class="tag">${escapeHtml(t)}</span>`).join('');
+
+        card.innerHTML = `
+          <h3>${escapeHtml(q.title)}</h3>
+          <div class="meta">
+            <span>Autor: <strong>${escapeHtml(q.author)}</strong></span>
+            <span>Eingereicht am: ${formatDate(q.createdAt)}</span>
+            <span>Fragen: ${q.questions}</span>
+            <div class="tags" aria-label="Tags">${tags}</div>
+          </div>
+          <div class="actions">
+            <span class="status" data-status="${q.status}">Status: ${statusLabel(q.status)}</span>
+            <button class="btn btn-reject" aria-label="Quiz ablehnen" data-action="reject">✗ Ablehnen</button>
+            <button class="btn btn-accept" aria-label="Quiz annehmen" data-action="approve">✓ Annehmen</button>
+          </div>
+        `;
+
+        // Button-Zustände nach Status
+        const approveBtn = card.querySelector('[data-action="approve"]');
+        const rejectBtn = card.querySelector('[data-action="reject"]');
+        if (q.status === 'approved') approveBtn.disabled = true;
+        if (q.status === 'rejected') rejectBtn.disabled = true;
+
+        card.addEventListener('click', async (e) => {
+          const btn = e.target.closest('button[data-action]');
+          if (!btn) return;
+          const action = btn.getAttribute('data-action');
+
+          if (action === 'approve') {
+            const ok = confirm(`Quiz "${q.title}" annehmen?`);
+            if (!ok) return;
+            await updateStatus(q.id, 'approved');
+          } else if (action === 'reject') {
+            const reason = prompt(`Quiz "${q.title}" ablehnen. Optional: Ablehnungsgrund angeben:`);
+            await updateStatus(q.id, 'rejected', reason || undefined);
+          }
+        });
+
+        listEl.appendChild(card);
+      }
+    }
+
+    function statusLabel(s) {
+      switch (s) {
+        case 'approved': return 'Angenommen';
+        case 'rejected': return 'Abgelehnt';
+        default: return 'Ausstehend';
+      }
+    }
+
+    function formatDate(iso) {
+      try {
+        const d = new Date(iso);
+        return d.toLocaleDateString('de-DE', { year: 'numeric', month: '2-digit', day: '2-digit' });
+      } catch { return iso; }
+    }
+
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    /** Datenfluss **/
+    function getFiltered() {
+      const all = loadFromLocal();
+      const search = searchEl.value.trim().toLowerCase();
+      const status = statusFilterEl.value;
+      return all.filter(q => {
+        const matchesSearch = !search || [q.title, q.author, ...(q.tags || [])].join(' ').toLowerCase().includes(search);
+        const matchesStatus = status === 'all' ? true : q.status === status;
+        return matchesSearch && matchesStatus;
+      });
+    }
+
+    async function updateStatus(id, newStatus, reason) {
+      // Optimistic UI: sofort lokal updaten
+      const data = loadFromLocal();
+      const item = data.find(q => q.id === id);
+      if (!item) return;
+      item.status = newStatus;
+      saveToLocal(data);
+      showToast(newStatus === 'approved' ? 'Quiz angenommen.' : 'Quiz abgelehnt.');
+      refreshList();
+
+      // Backend-Aufruf (wenn API vorhanden)
+      /*
+      const endpoint = newStatus === 'approved' ? `/api/quizzes/${encodeURIComponent(id)}/approve` : `/api/quizzes/${encodeURIComponent(id)}/reject`;
+      const res = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: newStatus === 'rejected' ? JSON.stringify({ reason: reason || null }) : undefined,
+      });
+      if (!res.ok) {
+        showToast('Fehler beim Speichern – Status wurde zurückgesetzt.');
+        // rollback
+        const prev = newStatus === 'approved' ? 'pending' : 'pending';
+        item.status = prev;
+        saveToLocal(data);
+        refreshList();
+      }
+      */
+    }
+
+    function showToast(msg) {
+      toastEl.textContent = msg;
+      toastEl.style.display = 'block';
+      clearTimeout(showToast._t);
+      showToast._t = setTimeout(() => { toastEl.style.display = 'none'; }, 2000);
+    }
+
+    function refreshList() {
+      listEl.setAttribute('aria-busy', 'true');
+      const items = getFiltered();
+      render(items);
+      listEl.setAttribute('aria-busy', 'false');
+    }
+
+    // Events
+    searchEl.addEventListener('input', refreshList);
+    statusFilterEl.addEventListener('change', refreshList);
+    refreshEl.addEventListener('click', refreshList);
+
+    // Initial
+    refreshList();
+  </script>

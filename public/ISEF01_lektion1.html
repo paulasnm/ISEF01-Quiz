@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Die Haifischbucht: Mathematik</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+  <body>
+    <header>
+      <div class="top-nav">
+        <a href="ISEF01_Karte.html">Zurück zur Startseite</a>
+      </div>
+    </header>
+
+    <h1>Die Haifischbucht</h1>
+
+    <main>
+      <div class="button-group">
+        <div class="button">
+         <!-- Ermöglicht dem Spieler in einer Gruppe zu spielen -->
+          <a href="#" onclick="joinGroup(event)">Der Lobby beitreten</a>
+        </div>
+        <div class="button small-button">
+          <!-- Ermöglicht dem Spieler allein spielen -->
+            <a href="ISEF01_Frage1.html" onclick="localStorage.setItem('multiplayer', 'false')">Alleine spielen</a>
+        </div>
+      </div>
+    </main>
+
+    <footer>
+      <div class="bottom-nav">
+        <a href="ISEF01_Login.html">Logout</a>
+        <a href="ISEF01_Nutzerprofil.html">Profil &amp; Einstellungen</a>
+        <a href="ISEF01_Bibliothek.html">Fragenkatalog</a>
+        <a href="ISEF01_AGB.html">AGB &amp; Impressum</a>
+      </div>
+    </footer>
+  </body>
+</html>
+
+<style>
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  font-family: "IM FELL Englisch", serif;
+  color: white;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+  background-image: url("Die Haifischbucht.jpeg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+/* Header*/
+.top-nav {
+  text-align: right;
+  padding: 12px 16px;
+  font-family: "IM FELL Englisch", serif;
+  font-size: 1.2em;
+  margin-right: 30px;
+  margin-top: 15px;
+}
+
+.top-nav a {
+  color: white;
+  text-decoration: none;
+}
+
+.top-nav a:hover {
+  color: #ccc;
+}
+
+main {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+main a {
+  color: white;
+  text-decoration: none;
+  font-size: 1.2em;
+  font-family:  "IM FELL Englisch", serif;
+}
+
+h1 {
+  text-align: center;
+  font-family: "IM FELL Englisch", serif;
+  font-size: 4rem;
+  margin-top: 40px;
+}
+
+/* Buttons */
+.button-group {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  align-items: center;
+}
+
+.button {
+  display: inline-block;
+  padding: 14px 28px;
+  background-color: #1ca7c6;
+  border-radius: 8px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.button:hover {
+  background-color: #1c6f82;
+  transform: scale(1.05);
+}
+
+/* Button für "Alleine spielen" */
+.small-button {
+  padding: 10px 20px;
+  font-size: 0.9em;
+}
+
+/* Footer */
+footer {
+  margin-top: auto;
+  padding: 16px 0;
+  font-family: "IM FELL Englisch", serif;
+}
+
+.bottom-nav {
+  width: 100%;
+  display: flex;
+  justify-content: space-evenly;
+  font-size: 1.1em;
+}
+
+.bottom-nav a {
+  color: white;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.bottom-nav a:hover {
+  color: #cccccc;
+}
+
+
+/* Smartphones (bis 600px) */
+@media (max-width: 600px) {
+  h1 {
+    font-size: 2rem !important;
+    margin-top: 20px;
+  }
+
+  .button-group {
+    gap: 12px;
+    width: 100%;
+    padding: 0 20px;
+  }
+
+  .button {
+    width: 100%;
+    text-align: center;
+    padding: 12px 0;
+  }
+
+  .small-button {
+    width: 80%;
+    font-size: 0.85em;
+    padding: 10px 0;
+  }
+
+  main a {
+    font-size: 1em;
+    display: block;
+    width: 100%;
+  }
+
+  .bottom-nav {
+    font-size: 0.9em;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    padding: 0 10px;
+  }
+
+  footer {
+    margin-bottom: 15px;
+  }
+}
+
+/* Tablets (601px – 1024px) */
+@media (min-width: 601px) and (max-width: 1024px) {
+  h1 {
+    font-size: 3rem !important;
+    margin-top: 30px;
+  }
+
+  .button-group {
+    gap: 14px;
+    width: 80%;
+  }
+
+  .button {
+    width: 100%;
+    text-align: center;
+    padding: 14px 0;
+  }
+
+  .small-button {
+    width: 60%;
+    font-size: 0.9em;
+  }
+
+  main a {
+    font-size: 1.1em;
+    display: block;
+    width: 100%;
+  }
+
+  .bottom-nav {
+    font-size: 1em;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  footer {
+    margin-bottom: 25px;
+  }
+}
+
+/* Desktop (ab 1025px) */
+@media (min-width: 1025px) {
+  h1 {
+    font-size: 4rem !important;
+    margin-top: 40px;
+  }
+
+  .button-group {
+    gap: 18px;
+  }
+
+  .button {
+    padding: 14px 32px;
+  }
+
+  .small-button {
+    padding: 10px 20px;
+    font-size: 0.95em;
+  }
+
+  main a {
+    font-size: 1.2em;
+  }
+
+  .bottom-nav {
+    font-size: 1.2em;
+    gap: 25px;
+  }
+
+  footer {
+    margin-bottom: 40px;
+  }
+}
+</style>
+
+
+<!-- Socket.IO Client -->
+<script src="/socket.io/socket.io.js"></script>
+
+<script>
+    // Lobby-Logik mit Socket.IO
+    const socket = io();
+  
+    function joinGroup(event) {
+      event.preventDefault();
+  
+      // Anfrage an den Server
+      socket.emit("requestJoin");
+  
+      // Antwort vom Server empfangen
+      socket.once("joinResponse", (data) => {
+        if (!data.success) {
+          alert("Es sind aktuell nicht genügend Spieler online. Bitte warte einen Moment oder spiele alleine.");
+          return;
+        }
+  
+        alert("Du wurdest einer Gruppe zugeteilt: " + data.group.join(", ") + "\nViel Erfolg im Spiel!");
+  
+        // Multiplayer-Flag setzen
+        localStorage.setItem("multiplayer", "true");
+  
+        // Spieler zur ersten Frage weiterleiten
+        window.location.href = "ISEF01_Frage1.html";
+      });
+    }
+  </script>
+  

@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Login zur Schatzinsel</title>
+  </head>
+
+  <body>
+    <div class="login-box">
+      <h1>Login zur Schatzinsel</h1>
+      <form onsubmit="return loginPruefung(event)">
+        <input type="text" id="benutzername" placeholder="Nutzername" required><br>
+        <input type="password" id="passwort" placeholder="Passwort" required><br>
+        <button type="button" id="togglePasswort" onclick="togglePasswortsichtbarkeit()">👁️ Passwort anzeigen</button>
+        <br>
+        <input type="submit" value="Anmelden">
+        <a href="ISEF01_Registrierung.html">Neuer Nutzer? Hier registrieren</a>
+        <a href="ISEF01_Passwortvergessen.html">Passwort vergessen?</a>
+      </form>
+      <div class="fehler" id="fehlermeldung"></div>
+    </div>
+  </body>
+</html>
+
+<style>
+  html,
+  body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    background-image: url("Die Schatzinsel2.jpeg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    font-family: "IM FELL Englisch", serif;
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .login-box {
+    background-color: rgba(0, 0, 0, 0.35);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 16px;
+    padding: 2em;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(2px);
+    width: 90%;
+    max-width: 400px;
+    text-align: center;
+  }
+
+  h1 {
+    margin-bottom: 1em;
+  }
+
+  input[type="text"],
+  input[type="password"] {
+    width: 100%;
+    padding: 0.8em;
+    margin: 0.5em 0;
+    border: none;
+    border-radius: 0.5em;
+    font-size: 1em;
+  }
+
+  input[type="submit"] {
+    width: 100%;
+    padding: 0.8em;
+    margin: 0.5em 0;
+    border: none;
+    border-radius: 0.5em;
+    background-color: #1ca7c6;
+    color: white;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+    font-family: "IM FELL Englisch", serif;
+  }
+
+  input[type="submit"]:hover {
+    background-color: #1c6f82;
+    transform: scale(1.02);
+  }
+
+  button#togglePasswort {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 0.9em;
+    cursor: pointer;
+    margin-bottom: 1em;
+    font-family: "IM FELL Englisch", serif;
+  }
+
+  a {
+    text-decoration: none;
+    color: #f5f5f5;
+    display: block;
+    margin-top: 1em;
+  }
+
+  a:hover {
+    text-decoration: underline;
+    color: #ffffff;
+  }
+
+  .fehler {
+    margin-top: 1em;
+    color: #ff6b6b;
+    font-size: 0.9em;
+  }
+
+  /* Smartphones */
+  @media (max-width: 600px) {
+    .login-box {
+      width: 90%;
+      padding: 1.5em;
+    }
+
+    h1 {
+      font-size: 1.4em;
+    }
+
+    input[type="text"],
+    input[type="password"],
+    input[type="submit"] {
+      font-size: 0.9em;
+      padding: 0.6em;
+    }
+
+    button#togglePasswort {
+      font-size: 0.8em;
+    }
+  }
+
+  /* Tablets */
+  @media (min-width: 601px) and (max-width: 1024px) {
+    .login-box {
+      width: 75%;
+      max-width: 450px;
+      padding: 2em;
+    }
+
+    h1 {
+      font-size: 1.8em;
+    }
+
+    input[type="text"],
+    input[type="password"],
+    input[type="submit"] {
+      font-size: 1em;
+      padding: 0.7em;
+    }
+
+    button#togglePasswort {
+      font-size: 0.9em;
+    }
+  }
+
+  /* Desktop */
+  @media (min-width: 1025px) {
+    .login-box {
+      width: 70%;
+      max-width: 500px;
+      padding: 3em;
+    }
+
+    h1 {
+      font-size: 2.2em;
+    }
+
+    input[type="text"],
+    input[type="password"],
+    input[type="submit"] {
+      font-size: 1.05em;
+      padding: 0.8em;
+    }
+
+    button#togglePasswort {
+      font-size: 1em;
+    }
+  }
+</style>
+
+<script>
+async function loginPruefung(event) {
+  event.preventDefault();
+  
+  const username = document.getElementById("benutzername").value.trim();
+  const password = document.getElementById("passwort").value.trim();
+  const fehlerDiv = document.getElementById("fehlermeldung");
+
+  // Fehlermeldung zurücksetzen
+  fehlerDiv.textContent = "";
+
+  // Eingabevalidierung
+  if (!username || !password) {
+    fehlerDiv.textContent = "Bitte alle Felder ausfüllen.";
+    return false;
+  }
+
+  // Admin-Login prüfen (hardcodiert)
+  if (username === "admin" && password === "admin123") {
+    try {
+      // Versuche Admin-Session beim Server zu setzen
+      const response = await fetch('/api/admin/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ username: "admin", password: "admin123" })
+      });
+
+      // Admin-Login erfolgreich (auch wenn Server nicht antwortet)
+      localStorage.setItem("isAdmin", "true");
+      localStorage.setItem("username", "admin");
+      window.location.href = "ISEF01_Admin.html";
+      return false;
+      
+    } catch (error) {
+      // Auch bei Server-Fehler Admin-Zugang gewähren
+      console.log('Admin-Login: Server nicht erreichbar, lokaler Login');
+      localStorage.setItem("isAdmin", "true");
+      localStorage.setItem("username", "admin");
+      window.location.href = "ISEF01_Admin.html";
+      return false;
+    }
+  }
+
+  // Normaler Benutzer-Login über API
+  try {
+    const response = await fetch('/api/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({ username, password })
+    });
+
+    const result = await response.json();
+
+    if (response.ok) {
+      // Normaler Login erfolgreich
+      localStorage.setItem("username", username);
+      localStorage.setItem("isAdmin", "false");
+      localStorage.setItem("userId", result.user.id);
+      window.location.href = "ISEF01_Benutzer.html";
+    } else {
+      // Server-Fehler oder falsche Anmeldedaten
+      fehlerDiv.textContent = result.error || "Ungültige Anmeldedaten";
+    }
+
+  } catch (error) {
+    console.error('Benutzer-Login Fehler:', error);
+    
+    // Demo-Fallback: Prüfen ob lokal registrierte Benutzer existieren
+    const registeredUser = localStorage.getItem('registeredUser');
+    if (registeredUser) {
+      try {
+        const userData = JSON.parse(registeredUser);
+        
+        // Einfache Demo-Authentifizierung
+        if (userData.username === username) {
+          console.log('Demo-Login für registrierten Benutzer');
+          localStorage.setItem("username", username);
+          localStorage.setItem("isAdmin", "false");
+          localStorage.setItem("userId", userData.userId || 'demo');
+          window.location.href = "ISEF01_Benutzer.html";
+          return false;
+        }
+      } catch (e) {
+        console.log('Demo-Login Fehler:', e);
+      }
+    }
+    
+    // Kein Match gefunden
+    fehlerDiv.textContent = "Server nicht erreichbar oder ungültige Anmeldedaten";
+  }
+
+  return false;
+}
+
+// Passwort-Sichtbarkeit umschalten
+function togglePasswortsichtbarkeit() {
+  const passwortfeld = document.getElementById("passwort");
+  const toggle = document.getElementById("togglePasswort");
+
+  if (passwortfeld.type === "password") {
+    passwortfeld.type = "text";
+    toggle.textContent = "👁️ Passwort verbergen";
+  } else {
+    passwortfeld.type = "password";
+    toggle.textContent = "👁️ Passwort anzeigen";
+  }
+}
+
+// Beim Laden der Seite: Prüfen ob bereits eingeloggt
+window.addEventListener('DOMContentLoaded', () => {
+  const isAdmin = localStorage.getItem('isAdmin');
+  const username = localStorage.getItem('username');
+  
+  // Automatische Weiterleitung falls bereits eingeloggt
+  if (username) {
+    if (isAdmin === 'true') {
+      console.log('Admin bereits eingeloggt, weiterleiten...');
+      window.location.href = "ISEF01_Admin.html";
+    } else {
+      console.log('Benutzer bereits eingeloggt, weiterleiten...');
+      window.location.href = "ISEF01_Benutzer.html";  
+    }
+  }
+});
+
+// Enter-Taste im Formular abfangen
+document.addEventListener('DOMContentLoaded', () => {
+  const form = document.querySelector('form');
+  if (form) {
+    form.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        loginPruefung(e);
+      }
+    });
+  }
+});
+
+  // Passwort-Sichtbarkeit umschalten
+  function togglePasswortsichtbarkeit() {
+    const passwortfeld = document.getElementById("passwort");
+    const toggle = document.getElementById("togglePasswort");
+
+    if (passwortfeld.type === "password") {
+      passwortfeld.type = "text";
+      toggle.textContent = "👁️ Passwort verbergen";
+    } else {
+      passwortfeld.type = "password";
+      toggle.textContent = "👁️ Passwort anzeigen";
+    }
+  }
+</script>

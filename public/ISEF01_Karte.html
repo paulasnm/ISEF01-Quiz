@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="de">
+    <head>
+        <meta charset="UTF-8">
+        <title>Dashboard Seite</title>
+    </head>
+
+    <body>
+        <header>
+            Die Schatzinsel
+        </header>
+    <main>
+        <!--Flaggen als Link zu den Quizes-->
+        <div class="flags">
+          <a href="ISEF01_lektion1.html" class="flag1" data-tooltip="Quiz 1: Die Haifischbucht - Mathematik"></a>
+          <a href="lektion2.html" class="flag2" data-tooltip="Quiz 2: Das Tigerterritorium - Geografie"></a> <!--href-Verknüpfung nur als Anschauung, da nur eine Kategorie erstellt wird-->
+          <a href="lektion2.html" class="flag3" data-tooltip="Quiz 3: Das Papageiengehege - Biologie"></a> <!--href-Verknüpfung nur als Anschauung, da nur eine Kategorie erstellt wird-->
+        </div>
+    </main>
+
+    <footer>
+        <!--untere Navigation (Logout, AGBs etc.)-->
+        <div class="bottom-nav">
+            <a href="ISEF01_Login.html">Logout</a>
+            <a href="ISEF01_Nutzerprofil.html">Profil &amp; Einstellungen</a>
+            <a href="ISEF01_Bibliothek.html">Fragenkatalog</a>
+            <a href="ISEF01_AGB.html">AGB &amp; Impressum</a>
+        </div>
+    </footer>
+    </body>
+      
+</html>
+
+<!--Gestalung der Seite-->
+<style>
+
+header {
+    font-size: 40px !important;
+    margin-top: 20px;
+    margin-left: 20px;
+    -webkit-text-stroke-width: 0.5px;
+    -webkit-text-stroke-color: black;
+}
+
+.flags {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.flags a {
+  position: relative;
+}
+
+.flags a::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: 110%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(255, 255, 255, 0.85);
+  color: #000000;
+  padding: 5px 8px;
+  border-radius: 5px;
+  white-space: nowrap;
+  font-size: 0.85em;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.flags a:hover::after {
+  opacity: 1;
+}
+
+
+/*Position und Design FLaggen*/
+.flag1 {
+  position: absolute;
+  width: 120px;
+  height: 80px;
+  background-image: url("piraten-flag.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  pointer-events: auto;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  filter: drop-shadow(0 10px 12px rgba(0,0,0,.55));
+  top: 55%; 
+  left: 25%;
+  display: block;
+
+}
+
+.flag1:hover {
+  transform: scale(1.06);
+}
+
+.flag2 {
+  position: absolute;
+  width: 120px;
+  height: 80px;
+  background-image: url("piraten-flag2.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  pointer-events: auto;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  filter: drop-shadow(0 10px 12px rgba(0,0,0,.55));
+  top: 20%; 
+  left: 70%;
+  display: block;
+}
+
+.flag2:hover {
+  transform: scale(1.06);
+}
+
+.flag3 {
+  position: absolute;
+  width: 120px;
+  height: 80px;
+  background-image: url("piraten-flag2.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  pointer-events: auto;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  filter: drop-shadow(0 10px 12px rgba(0,0,0,.55));
+  top: -10%; 
+  left: 25%;
+  display: block;
+}
+
+.flag3:hover {
+  transform: scale(1.06);
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  font-family: "IM FELL Englisch", serif;
+  color: white;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+  background-image: url("Die Schatzinsel2.jpeg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+main {
+  flex: 1;
+  position: relative; 
+}
+
+/*Position und Design untere Navigation*/
+footer {
+  margin-top: auto;
+  padding-top: 16px;
+  padding-bottom: 16px;
+  font-family: "IM FELL Englisch", serif;
+  font-size: larger;
+}
+
+.bottom-nav {
+  width: 100%;
+  display: flex;
+  justify-content: space-evenly;
+  font-size: 1.2em;
+}
+
+.bottom-nav a {
+  color: white;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.bottom-nav a:hover {
+  color: #cccccc;
+}
+
+/* Smartphones (bis 600px) */
+@media (max-width: 600px) {
+  header {
+    font-size: 28px !important;
+    text-align: center;
+    margin: 10px 0;
+  }
+
+  .flag1, .flag2, .flag3 {
+    width: 80px;
+    height: 55px;
+  }
+
+  .flag1 { top: 60%; left: 20%; }
+  .flag2 { top: 25%; left: 65%; }
+  .flag3 { top: 5%;  left: 20%; }
+
+  .bottom-nav {
+    font-size: 14px;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    padding: 10px;
+  }
+
+  footer {
+    margin-bottom: 15px;
+  }
+}
+
+/* Tablets (601px – 1024px) */
+@media (min-width: 601px) and (max-width: 1024px) {
+  header {
+    font-size: 34px !important;
+    text-align: center;
+  }
+
+  .flag1, .flag2, .flag3 {
+    width: 100px;
+    height: 70px;
+  }
+
+  .flag1 { top: 55%; left: 25%; }
+  .flag2 { top: 22%; left: 68%; }
+  .flag3 { top: 0%;  left: 25%; }
+
+  .bottom-nav {
+    font-size: 18px;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+  }
+
+  footer {
+    margin-bottom: 25px;
+  }
+}
+
+/* Desktop (ab 1025px) */
+@media (min-width: 1025px) {
+  header {
+    font-size: 40px !important;
+    margin-left: 20px;
+  }
+
+  .flag1, .flag2, .flag3 {
+    width: 120px;
+    height: 80px;
+  }
+
+  .bottom-nav {
+    font-size: 20px;
+    gap: 30px;
+  }
+
+  footer {
+    margin-bottom: 40px;
+  }
+}
+
+</style>

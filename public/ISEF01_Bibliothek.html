@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Fragenkatalog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body>
+  <div class="top-nav">
+    <a href="ISEF01_Karte.html">Zurück zur Startseite</a>
+  </div>
+
+  <h1>Fragenkatalog</h1>
+
+  <section class="toolbar" aria-label="Werkzeuge zur Suche">
+    <input id="search" type="search" placeholder="Nach Kurs suchen…" aria-label="Suche" />
+    <div class="toolbar-actions">
+      <button id="refresh" class="btn">Aktualisieren ↺</button>
+      <button id="global-add" class="btn btn-primary">Frage erstellen +</button>
+    </div>
+  </section>
+
+  <main class="list" id="list" aria-live="polite" aria-busy="false"></main>
+
+  <!-- Quiz-Bereich -->
+  <section id="quiz-section" class="quiz hidden" aria-label="Quizbereich">
+    <h2 id="quiz-title"></h2>
+    <div id="question-box"></div>
+
+    <div class="quiz-controls">
+      <button id="prev-question" class="btn" aria-label="Vorherige Frage">⬅ Vorherige</button>
+      <button id="next-question" class="btn" aria-label="Nächste Frage">Nächste ➡</button>
+    </div>
+  </section>
+
+  <footer>
+    <div class="bottom-nav">
+      <a href="ISEF01_Login.html">Logout</a>
+      <a href="ISEF01_Nutzerprofil.html">Profil &amp; Einstellungen</a>
+      <a href="ISEF01_Bibliothek.html">Fragenkatalog</a>
+      <a href="ISEF01_AGB.html">AGB &amp; Impressum</a>
+    </div>
+  </footer>
+
+  <!-- Frage erstellen -->
+  <div class="modal hidden" id="modal">
+    <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <h3 id="modal-title">Neue Frage erstellen</h3>
+
+      <form id="question-form">
+        <div class="form-row">
+          <label for="q-text">Frage *</label>
+          <textarea id="q-text" rows="3" maxlength="500" required></textarea>
+        </div>
+
+        <div class="form-row">
+          <label>Lösungen (eine als richtig markieren)</label>
+          <div class="answers">
+            <div class="answer-row">
+              <input type="radio" name="correct" value="0" required>
+              <input type="text" name="answer0" placeholder="Antwort 1" required>
+            </div>
+            <div class="answer-row">
+              <input type="radio" name="correct" value="1">
+              <input type="text" name="answer1" placeholder="Antwort 2" required>
+            </div>
+            <div class="answer-row">
+              <input type="radio" name="correct" value="2">
+              <input type="text" name="answer2" placeholder="Antwort 3" required>
+            </div>
+            <div class="answer-row">
+              <input type="radio" name="correct" value="3">
+              <input type="text" name="answer3" placeholder="Antwort 4" required>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <label for="category">Kategorie *</label>
+          <input id="category" type="text" placeholder="z. B. Mathe" required>
+        </div>
+
+        <div class="form-row">
+          <label for="tags">Tags</label>
+          <input id="tags" type="text" placeholder="z. B. Algebra, Schule">
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="btn" id="cancel-modal">Abbrechen</button>
+          <button type="submit" class="btn btn-primary">Speichern ✓</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
+
+<style>
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  font-family: "IM FELL Englisch", serif;
+  color: white;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+  background-image: url("Die Schatzinsel2.jpeg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  padding-left: 24px;
+  padding-right: 24px;
+  gap: 10px;
+}
+
+/* Top-Navigation */
+.top-nav {
+  text-align: right;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 8px;
+  padding-right: 8px;
+  margin-top: 5px;
+  margin-right: 15px;
+  font-size: 0.8rem;
+  font-family: "IM FELL Englisch", serif;
+}
+
+.top-nav a {
+  color: white;
+  text-decoration: none;
+}
+
+.top-nav a:hover {
+  text-decoration: underline;
+}
+
+
+h1 {
+  margin-top: 50px;
+  font-size: 250% !important;
+  font-weight: bold;
+  text-align: center;
+  font-family: "IM FELL Englisch";
+  text-decoration: underline;
+}
+
+/* Toolbar */
+.toolbar {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 12px;
+  align-items: center;
+  max-width: 900px;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.toolbar input[type="search"] {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left: 12px;
+  padding-right: 12px;
+  border-radius: 10px;
+  border-width: 1px;
+  border-style: solid;
+  border-color: rgba(255, 255, 255, 0.25);
+  background-color: rgba(0, 0, 0, 0.35);
+  color: #ffffff;
+  backdrop-filter: blur(2px);
+}
+
+.toolbar-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left: 12px;
+  padding-right: 12px;
+  border-radius: 10px;
+  border-width: 1px;
+  border-style: solid;
+  border-color: rgba(255, 255, 255, 0.25);
+  background-color: rgba(0, 0, 0, 0.35);
+  color: #ffffff;
+  cursor: pointer;
+  user-select: none;
+  transition: transform 0.08s ease, background 0.15s ease;
+  backdrop-filter: blur(2px);
+  font-family: "IM FELL Englisch", serif;
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.btn-primary {
+  border-color: rgba(0, 255, 0, 0.35);
+}
+
+/* Liste */
+.list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 28px;
+  max-width: 1200px;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 30px;
+  margin-bottom: 0;
+}
+
+.card {
+  background-color: rgba(0, 0, 0, 0.35);
+  border-width: 1px;
+  border-style: solid;
+  border-color: rgba(255, 255, 255, 0.25);
+  border-radius: 16px;
+  padding: 16px;
+  display: grid;
+  gap: 10px;
+  backdrop-filter: blur(2px);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  cursor: pointer;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25);
+}
+
+.card h3 {
+  margin: 0;
+  font-size: clamp(1.2rem, 2.2vw, 1.6rem);
+}
+
+.meta {
+  font-size: 0.9rem;
+  opacity: 0.9;
+}
+
+/* Quizfragen */
+.quiz {
+  max-width: 800px;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 30px;
+  margin-bottom: 0;
+  padding: 20px;
+  background-color: rgba(0, 0, 0, 0.35);
+  border-radius: 16px;
+  border-width: 1px;
+  border-style: solid;
+  border-color: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(2px);
+}
+
+.hidden {
+  display: none;
+}
+
+.quiz h2 {
+  text-align: center;
+  margin-top: 0;
+  margin-bottom: 20px;
+}
+
+#question-box {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  font-size: 1.2rem;
+}
+
+.quiz-controls {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+/* Antworten-Anzeige im Quiz */
+.answers-display {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.answer-option {
+  padding: 12px;
+  margin-bottom: 8px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.answer-option.correct {
+  background-color: rgba(0, 255, 0, 0.2);
+  border-color: rgba(0, 255, 0, 0.4);
+}
+
+.explanation {
+  margin-top: 20px;
+  padding: 15px;
+  background-color: rgba(0, 150, 255, 0.2);
+  border-radius: 8px;
+  border-left: 4px solid #0096ff;
+}
+
+/* Navigation Buttons */
+.quiz-controls button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Versteckte Liste im Quiz-Modus */
+.list.hidden {
+  display: none;
+}
+
+/* Footer */
+footer {
+  margin-top: auto;
+  padding-top: 16px;
+  padding-bottom: 16px;
+  font-family: "IM FELL Englisch", serif;
+  font-size: larger;
+}
+
+.bottom-nav {
+  width: 100%;
+  display: flex;
+  justify-content: space-evenly;
+  font-size: 1.2em;
+}
+
+.bottom-nav a {
+  color: white;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.bottom-nav a:hover {
+  color: #cccccc;
+}
+
+/* Modal */
+.modal {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(3px);
+  z-index: 1000;
+}
+
+.modal.hidden {
+  display: none;
+}
+
+.modal-content {
+  width: min(92vw, 720px);
+  background-color: rgba(0, 0, 0, 0.35);
+  color: #ffffff;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+}
+
+.modal-content h3 {
+  margin-top: 0;
+  margin-bottom: 12px;
+  font-size: 1.25rem;
+}
+
+.form-row {
+  display: grid;
+  gap: 8px;
+  margin-top: 12px;
+  margin-bottom: 12px;
+}
+
+.form-row label {
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.form-row input[type="text"] {
+  padding: 10px 12px;
+  border-width: 2px;
+  border-style: solid;
+  border-color: #dddddd;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.form-row textarea {
+  padding: 10px 12px;
+  border-width: 2px;
+  border-style: solid;
+  border-color: #dddddd;
+  border-radius: 8px;
+  font-size: 14px;
+  resize: vertical;
+}
+
+.answers {
+  display: grid;
+  gap: 8px;
+}
+
+.answer-row {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 8px;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+/* Toast */
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  transform: translateX(-50%);
+  background-color: rgba(0, 0, 0, 0.8);
+  border-width: 1px;
+  border-style: solid;
+  border-color: rgba(255, 255, 255, 0.25);
+  color: #ffffff;
+  padding: 12px 16px;
+  border-radius: 12px;
+  z-index: 9999;
+  display: none;
+}
+
+
+/* Smartphones (bis 600px) */
+@media (max-width: 600px) {
+  body {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+
+  h1 {
+    font-size: 2rem !important;
+    margin-top: 30px;
+  }
+
+  .toolbar {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .list {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .quiz {
+    margin-top: 20px;
+    padding: 16px;
+  }
+
+  .quiz-controls {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .bottom-nav {
+    font-size: 14px;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+
+  footer {
+    margin-bottom: 20px;
+  }
+
+  .modal-content {
+    width: 94vw;
+    padding: 16px;
+  }
+}
+
+/* Tablets (601px – 1024px) */
+@media (min-width: 601px) and (max-width: 1024px) {
+  body {
+    padding-left: 30px;
+    padding-right: 30px;
+  }
+
+  h1 {
+    font-size: 2.5rem !important;
+    margin-top: 40px;
+  }
+
+  .toolbar {
+    grid-template-columns: 1fr auto;
+  }
+
+  .list {
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 24px;
+  }
+
+  .bottom-nav {
+    font-size: 18px;
+    flex-wrap: wrap;
+    gap: 15px;
+  }
+
+  footer {
+    margin-bottom: 30px;
+  }
+}
+
+/* Desktop (ab 1025px) */
+@media (min-width: 1025px) {
+  body {
+    padding-left: 40px;
+    padding-right: 40px;
+  }
+
+  h1 {
+    font-size: 3rem !important;
+    margin-top: 60px;
+  }
+
+  .list {
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 28px;
+  }
+
+  .bottom-nav {
+    font-size: 20px;
+    gap: 30px;
+  }
+
+  footer {
+    margin-bottom: 50px;
+  }
+}
+</style>
+
+<script>
+/* ===============================
+   DOM-Referenzen
+   =============================== */
+const listEl = document.getElementById('list');
+const searchEl = document.getElementById('search');
+const refreshEl = document.getElementById('refresh');
+
+const quizSection = document.getElementById('quiz-section');
+const quizTitle = document.getElementById('quiz-title');
+const questionBox = document.getElementById('question-box');
+const prevBtn = document.getElementById('prev-question');
+const nextBtn = document.getElementById('next-question');
+
+const globalAddBtn = document.getElementById('global-add');
+const modal = document.getElementById('modal');
+const qForm = document.getElementById('question-form');
+const cancelModal = document.getElementById('cancel-modal');
+const toastEl = document.getElementById('toast');
+
+/* ===============================
+   State
+   =============================== */
+let allCourses = [];
+let currentCourse = null;
+let currentQuestions = [];
+let currentIndex = 0;
+
+/* ===============================
+   API-Funktionen
+   =============================== */
+async function loadCourses() {
+  try {
+    const response = await fetch('/api/courses');
+    if (!response.ok) throw new Error('Fehler beim Laden der Kurse');
+    return await response.json();
+  } catch (error) {
+    console.error('Kurse laden Fehler:', error);
+    showToast('Fehler beim Laden der Kurse');
+    return [];
+  }
+}
+
+async function loadQuestions(courseId) {
+  try {
+    const response = await fetch(`/api/courses/${courseId}/questions`);
+    if (!response.ok) throw new Error('Fehler beim Laden der Fragen');
+    return await response.json();
+  } catch (error) {
+    console.error('Fragen laden Fehler:', error);
+    showToast('Fehler beim Laden der Fragen');
+    return [];
+  }
+}
+
+async function createQuestion(questionData) {
+  try {
+    const response = await fetch('/api/questions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(questionData)
+    });
+    
+    const result = await response.json();
+    
+    if (!response.ok) {
+      throw new Error(result.error || 'Fehler beim Erstellen der Frage');
+    }
+    
+    return result;
+  } catch (error) {
+    console.error('Frage erstellen Fehler:', error);
+    throw error;
+  }
+}
+
+/* ===============================
+   Render-Funktionen
+   =============================== */
+function renderCourses(courses) {
+  listEl.innerHTML = '';
+
+  if (!courses.length) {
+    listEl.innerHTML = '<div class="card"><p>Keine Kurse gefunden.</p></div>';
+    return;
+  }
+
+  for (const course of courses) {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = `
+      <h3>${escapeHtml(course.course_name)}</h3>
+      <div class="meta">Fragen: ${course.question_count}</div>
+    `;
+    card.addEventListener('click', () => openQuiz(course));
+    listEl.appendChild(card);
+  }
+}
+
+function showQuestion() {
+  if (!currentQuestions.length) {
+    questionBox.innerHTML = '<p>Keine Fragen vorhanden.</p>';
+    updateNavigationButtons();
+    return;
+  }
+  
+  const q = currentQuestions[currentIndex];
+  let html = `<h3>Frage ${currentIndex + 1} von ${currentQuestions.length}</h3>`;
+  html += `<h4>${escapeHtml(q.text)}</h4>`;
+  
+  if (q.answers && q.answers.length > 0) {
+    html += '<div class="answers-display">';
+    q.answers.forEach((answer, index) => {
+      const label = String.fromCharCode(65 + index); // A, B, C, D
+      const isCorrect = answer.right_wrong;
+      html += `
+        <div class="answer-option ${isCorrect ? 'correct' : ''}">
+          <strong>${label}:</strong> ${escapeHtml(answer.text)}
+          ${isCorrect ? ' ✓' : ''}
+        </div>
+      `;
+    });
+    html += '</div>';
+  }
+  
+  if (q.explanation) {
+    html += `<div class="explanation"><strong>Erklärung:</strong> ${escapeHtml(q.explanation)}</div>`;
+  }
+  
+  questionBox.innerHTML = html;
+  updateNavigationButtons();
+}
+
+function updateNavigationButtons() {
+  prevBtn.disabled = currentIndex === 0;
+  nextBtn.disabled = currentIndex >= currentQuestions.length - 1;
+}
+
+/* ===============================
+   Quiz-Logik
+   =============================== */
+async function openQuiz(course) {
+  currentCourse = course;
+  currentQuestions = await loadQuestions(course.course_id);
+  currentIndex = 0;
+  quizTitle.textContent = course.course_name;
+  showQuestion();
+  quizSection.classList.remove('hidden');
+  listEl.classList.add('hidden');
+}
+
+function closeQuiz() {
+  quizSection.classList.add('hidden');
+  listEl.classList.remove('hidden');
+  currentCourse = null;
+  currentQuestions = [];
+  currentIndex = 0;
+}
+
+/* ===============================
+   Utilities
+   =============================== */
+function escapeHtml(str) {
+  if (!str) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
+function showToast(msg) {
+  toastEl.textContent = msg;
+  toastEl.style.display = 'block';
+  clearTimeout(showToast._t);
+  showToast._t = setTimeout(() => {
+    toastEl.style.display = 'none';
+  }, 3000);
+}
+
+/* ===============================
+   Filter + Refresh
+   =============================== */
+function getFiltered() {
+  const search = searchEl.value.trim().toLowerCase();
+  return allCourses.filter(c => 
+    !search || c.course_name.toLowerCase().includes(search)
+  );
+}
+
+async function refreshList() {
+  allCourses = await loadCourses();
+  renderCourses(getFiltered());
+}
+
+/* ===============================
+   Modal "Frage erstellen"
+   =============================== */
+globalAddBtn.addEventListener('click', () => {
+  qForm.reset();
+  modal.classList.remove('hidden');
+});
+
+cancelModal.addEventListener('click', () => {
+  modal.classList.add('hidden');
+});
+
+qForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  const text = document.getElementById('q-text').value.trim();
+  const answers = [
+    qForm.answer0.value.trim(),
+    qForm.answer1.value.trim(),
+    qForm.answer2.value.trim(),
+    qForm.answer3.value.trim()
+  ];
+  const correctIndex = Number(qForm.correct.value);
+  const category = document.getElementById('category').value.trim();
+  const explanation = document.getElementById('q-explanation') ? 
+    document.getElementById('q-explanation').value.trim() : '';
+
+  if (!text || answers.some(a => !a) || Number.isNaN(correctIndex) || !category) {
+    showToast('Bitte alle Pflichtfelder ausfüllen und eine richtige Antwort markieren.');
+    return;
+  }
+
+  try {
+    await createQuestion({
+      text,
+      answers,
+      correctIndex,
+      category,
+      explanation
+    });
+    
+    modal.classList.add('hidden');
+    showToast('Frage gespeichert. Wartet auf Freigabe durch Admin.');
+    
+    // Liste aktualisieren
+    await refreshList();
+    
+  } catch (error) {
+    showToast('Fehler beim Speichern: ' + error.message);
+  }
+});
+
+/* ===============================
+   Navigation Buttons
+   =============================== */
+prevBtn.addEventListener('click', () => {
+  if (currentIndex > 0) {
+    currentIndex--;
+    showQuestion();
+  }
+});
+
+nextBtn.addEventListener('click', () => {
+  if (currentIndex < currentQuestions.length - 1) {
+    currentIndex++;
+    showQuestion();
+  }
+});
+
+// Zurück zur Kursübersicht
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && !quizSection.classList.contains('hidden')) {
+    closeQuiz();
+  }
+});
+
+/* ===============================
+   Init
+   =============================== */
+searchEl.addEventListener('input', () => {
+  renderCourses(getFiltered());
+});
+refreshEl.addEventListener('click', refreshList);
+
+// Seite initialisieren
+refreshList();
+</script>

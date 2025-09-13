@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Ergebnis</title>
+  </head>
+
+  <body>
+    <header>
+      <div class="top-nav">
+        <a href="ISEF01_Karte.html">X</a>
+      </div>
+      
+    </header>
+
+    <main>
+      <h1>Ergebnis</h1>
+      <br /><br />
+
+      <div class="result-box">
+        <p class="result-title">Deine gesammelten Goldmünzen</p>
+        <p class="result-value">
+          <strong id="total-coins">0</strong> 🪙
+        </p>
+
+        <div class="result-actions">
+          <a id="restart-btn" class="btn primary" href="ISEF01_lektion1.html">Neues Quiz starten</a>
+          <a class="btn ghost" href="ISEF01_Karte.html">Zur Startseite</a>
+        </div>
+      </div>
+    </main>
+  </body>
+
+  <footer>
+    <!--untere Navigation (Logout, AGBs etc.)-->
+    <div class="bottom-nav">
+      <a href="ISEF01_Login.html">Logout</a>
+      <a href="ISEF01_Nutzerprofil.html">Profil &amp; Einstellungen</a>
+      <a href="ISEF01_Bibliothek.html">Fragenkatalog</a>
+      <a href="ISEF01_AGB.html">AGB &amp; Impressum</a>
+    </div>
+  </footer>
+</html>
+
+<style>
+  .top-nav {
+    text-align: right;
+    padding: 12px 16px;
+    font-family: "IM FELL Englisch", serif;
+    font-size: larger;
+    margin-right: 50px;
+    margin-top: 20px;
+  }
+  .top-nav a {
+    color: white;
+    text-decoration: none;
+  }
+  .top-nav a:hover {
+    color: #ffffff;
+  }
+
+  .nav-left {
+    margin-left: 50px;
+    color: white;
+    font-family: Inter, sans-serif;
+  }
+
+  main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  html,
+  body {
+    height: 100%;
+    margin: 0;
+  }
+
+  body {
+    background-image: url("Die Haifischbucht.jpeg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    font-family: "IM FELL Englisch", serif;
+    height: 100%;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  h1 {
+    font-family: "IM FELL Englisch";
+    font-size: 50px;
+    color: white;
+    text-align: left;
+    font-weight: 5;
+    margin-top: 50px;
+    -webkit-text-stroke-width: 0.5px;
+    -webkit-text-stroke-color: black;
+  }
+
+  /* Ergebnisbox */
+  .result-box {
+    text-align: center;
+    background: rgba(0, 0, 0, 0.35);
+    padding: 28px;
+    border-radius: 12px;
+    max-width: 700px;
+    width: 90%;
+    color: #ffffff;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+  }
+  .result-title {
+    font-size: 1.4em;
+    margin-bottom: 10px;
+  }
+  .result-value {
+    font-size: 3rem;
+    margin: 6px 0 22px 0;
+  }
+
+  .result-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    display: inline-block;
+    padding: 12px 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 1.1em;
+    transition: transform 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+  }
+  .btn:hover {
+    transform: scale(1.03);
+  }
+  .btn.primary {
+    background-color: #1ca7c6;
+    color: white;
+  }
+  .btn.primary:hover {
+    background-color: #1c6f82;
+  }
+  .btn.ghost {
+    background-color: transparent;
+    color: #dfdfdf;
+    border: 2px solid #dfdfdf;
+  }
+  .btn.ghost:hover {
+    color: #c3c3c3;
+    border-color: #c3c3c3;
+  }
+
+/* Position und Design untere Navigation */
+
+footer {
+  margin-top: auto;
+  padding-top: 16px;
+  padding-bottom: 16px;
+  font-family: "IM FELL Englisch", serif;
+  font-size: larger;
+}
+
+.bottom-nav {
+  width: 100%;
+  display: flex;
+  justify-content: space-evenly;
+  font-size: 1.2em;
+}
+
+.bottom-nav a {
+  color: white;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.bottom-nav a:hover {
+  color: #cccccc;
+}
+
+
+/* Smartphones (bis 600px) */
+@media (max-width: 600px) {
+  body {
+    padding-left: 15px;
+    padding-right: 15px;
+    font-size: 0.9em;
+  }
+
+  h1 {
+    font-size: 2rem !important;
+    margin-top: 30px;
+    text-align: center;
+  }
+
+  .result-box {
+    padding: 20px;
+    font-size: 1em;
+  }
+
+  .bottom-nav {
+    font-size: 14px;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+
+  footer {
+    margin-bottom: 20px;
+  }
+}
+
+/* Tablets (601px – 1024px) */
+@media (min-width: 601px) and (max-width: 1024px) {
+  body {
+    padding-left: 30px;
+    padding-right: 30px;
+    font-size: 1em;
+  }
+
+  h1 {
+    font-size: 2.5rem !important;
+    margin-top: 40px;
+    text-align: center;
+  }
+
+  .result-box {
+    padding: 24px;
+    font-size: 1.1em;
+  }
+
+  .bottom-nav {
+    font-size: 18px;
+    flex-wrap: wrap;
+    gap: 15px;
+  }
+
+  footer {
+    margin-bottom: 30px;
+  }
+}
+
+/* Desktop (ab 1025px) */
+@media (min-width: 1025px) {
+  body {
+    padding-left: 40px;
+    padding-right: 40px;
+    font-size: 1.05em;
+  }
+
+  h1 {
+    font-size: 3rem !important;
+    margin-top: 60px;
+  }
+
+  .result-box {
+    padding: 28px;
+    font-size: 1.2em;
+  }
+
+  .bottom-nav {
+    font-size: 20px;
+    gap: 30px;
+  }
+
+  footer {
+    margin-bottom: 50px;
+  }
+}
+
+</style>
+
+<script>
+  
+  // Coins-Logik
+  const COINS_KEY = "coins";
+
+  function getCoins() {
+    const v = parseInt(localStorage.getItem(COINS_KEY) || "0", 10);
+    return isNaN(v) ? 0 : v;
+  }
+  function setCoins(v) {
+    localStorage.setItem(COINS_KEY, String(v));
+    const headerEl = document.getElementById("coins");
+    if (headerEl) headerEl.textContent = String(v);
+  }
+
+  // Ergebnis/Endseite
+  function showTotalOnResults() {
+    const totalEl = document.getElementById("total-coins");
+    if (totalEl) totalEl.textContent = String(getCoins());
+  }
+
+  // Reset für neues Quiz 
+  function resetQuizProgress() {
+    localStorage.setItem(COINS_KEY, "0");
+    const keys = Object.keys(localStorage);
+    for (const k of keys) {
+      if (k.startsWith("awarded:")) localStorage.removeItem(k);
+    }
+  }
+
+
+  // Initialisierung
+
+  document.addEventListener("DOMContentLoaded", () => {
+    // Header-Anzeige aktualisieren
+    setCoins(getCoins());
+    // Gesamtsumme anzeigen
+    showTotalOnResults();
+
+    const restartBtn = document.getElementById("restart-btn");
+    if (restartBtn) {
+      restartBtn.addEventListener("click", () => {
+        resetQuizProgress();
+      });
+    }
+  });
+</script>
