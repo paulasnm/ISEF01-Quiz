@@ -34,6 +34,29 @@ let activeGroups = [];
 io.on('connection', (socket) => {
   console.log(`🔌 Neuer Spieler verbunden: ${socket.id}`);
 
+  // Chat beitreten
+  socket.on('join-chat', (data) => {
+    socket.username = data.username;
+    console.log(`💬 ${data.username} ist dem Chat beigetreten`);
+    
+    // Anderen Spielern mitteilen
+    socket.broadcast.emit('player-joined', {
+      username: data.username
+    });
+  });
+
+  // Chat-Nachricht
+  socket.on('chat-message', (data) => {
+    console.log(`💬 Chat von ${data.username}: ${data.text}`);
+    
+    // Nachricht an alle anderen Spieler weiterleiten
+    socket.broadcast.emit('chat-message', {
+      text: data.text,
+      username: data.username,
+      timestamp: data.timestamp
+    });
+  });
+
   // Lobby beitreten
   socket.on('requestJoin', () => {
     console.log(`👥 Spieler ${socket.id} möchte der Lobby beitreten`);
@@ -87,6 +110,13 @@ io.on('connection', (socket) => {
   // Spieler verlässt die Verbindung
   socket.on('disconnect', () => {
     console.log(`🔌 Spieler getrennt: ${socket.id}`);
+    
+    // Chat-Austritt mitteilen
+    if (socket.username) {
+      socket.broadcast.emit('player-left', {
+        username: socket.username
+      });
+    }
     
     // Aus Warteschlange entfernen
     waitingPlayers = waitingPlayers.filter(p => p.id !== socket.id);
