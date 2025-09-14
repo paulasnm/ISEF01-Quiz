@@ -25,7 +25,11 @@
 
   <!-- Quiz-Bereich -->
   <section id="quiz-section" class="quiz hidden" aria-label="Quizbereich">
+    <div class="quiz-header">
     <h2 id="quiz-title"></h2>
+    <button id="quiz-close" aria-label="Quiz schließen">✖</button>
+  </div>
+
     <div id="question-box"></div>
 
     <div class="quiz-controls">
@@ -33,6 +37,12 @@
       <button id="next-question" class="btn" aria-label="Nächste Frage">Nächste ➡</button>
     </div>
   </section>
+
+<!-- Demo-Daten Hinweis -->
+<div id="demo-banner" class="hidden">
+  <span>⚠️ Demo-Daten aktiv – API nicht erreichbar</span>
+  <button id="close-demo" aria-label="Demo-Hinweis schließen">✖</button>
+</div>
 
   <footer>
     <div class="bottom-nav">
@@ -147,14 +157,44 @@ body {
   text-decoration: none;
 }
 
-
 h1 {
   margin-top: 50px;
   font-size: 250% !important;
   font-weight: bold;
   text-align: center;
   font-family: "IM FELL Englisch";
-  text-decoration: underline;
+  text-decoration: none;
+  -webkit-text-stroke-width: 0.5px;
+  -webkit-text-stroke-color: black;
+}
+
+/* Demo-Banner */
+#demo-banner {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: rgba(200, 0, 0, 0.85);
+  color: white;
+  font-weight: bold;
+  padding: 10px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 2000;
+  font-family: sans-serif;
+}
+
+#demo-banner.hidden {
+  display: none;
+}
+
+#demo-banner button {
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 1.2rem;
+  cursor: pointer;
 }
 
 /* Toolbar */
@@ -297,6 +337,21 @@ h1 {
   justify-content: space-between;
   gap: 12px;
 }
+
+.quiz-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#quiz-close {
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
 
 /* Antworten-Anzeige im Quiz */
 .answers-display {
@@ -573,9 +628,7 @@ footer {
 </style>
 
 <script>
-/* ===============================
-   DOM-Referenzen
-   =============================== */
+
 const listEl = document.getElementById('list');
 const searchEl = document.getElementById('search');
 const refreshEl = document.getElementById('refresh');
@@ -592,38 +645,174 @@ const qForm = document.getElementById('question-form');
 const cancelModal = document.getElementById('cancel-modal');
 const toastEl = document.getElementById('toast');
 
-/* ===============================
-   State
-   =============================== */
 let allCourses = [];
 let currentCourse = null;
 let currentQuestions = [];
 let currentIndex = 0;
 
-/* ===============================
-   API-Funktionen
-   =============================== */
+/* Demo Daten */
+const demoCourses = [
+  {
+    course_id: 1,
+    course_name: "Mathematik",
+    question_count: 6,
+    questions: [
+      {
+        text: "Was ist 7 + 5?",
+        answers: [
+          { text: "10", right_wrong: false },
+          { text: "11", right_wrong: false },
+          { text: "12", right_wrong: true },
+          { text: "13", right_wrong: false }
+        ],
+        explanation: "7 + 5 = 12, einfache Addition."
+      },
+      {
+        text: "Welche Zahl ist eine Primzahl?",
+        answers: [
+          { text: "9", right_wrong: false },
+          { text: "13", right_wrong: true },
+          { text: "21", right_wrong: false },
+          { text: "27", right_wrong: false }
+        ],
+        explanation: "13 ist nur durch 1 und 13 teilbar."
+      },
+      {
+        text: "Was ist die Wurzel aus 144?",
+        answer: [
+          { text: "13", right_wrong: false },
+          { text: "12", right_wrong: true },
+          { text: "14", right_wrong: false },
+          { text: "15", right_wrong: false }
+        ],
+        explanation: "12 * 12 = 144."
+      },
+      {
+        text: "Welche der folgenden Zahlen ist keine gerade Zahl?",
+        answer: [
+          { text: "21", right_wrong: true },
+          { text: "22", right_wrong: false },
+          { text: "42", right_wrong: false },
+          { text: "40", right_wrong: false}
+        ],
+        explanation: "Die 21 ist eine ungrade Zahl."
+      },
+      {
+      text: "Was ergibt 12 × 8?",
+      answers: [
+          { text: "80", right_wrong: false },
+          { text: "88", right_wrong: false },
+          { text: "92", right_wrong: false },
+          { text: "96", right_wrong: true }
+        ],
+        explanation: "12 mal 8 = 96."
+      },
+      {
+      text: "Wie lautet die Fläche eines Quadrats mit Seitenlänge 6?",
+      answers: [
+          { text: "18", right_wrong: false },
+          { text: "24", right_wrong: false },
+          { text: "30", right_wrong: false },
+          { text: "36", right_wrong: true }
+        ],
+        explanation: "A = a × a = 6 × 6 = 36."
+      }
+    ]
+  },
+  {
+    course_id: 2,
+    course_name: "Geschichte",
+    question_count: 6,
+    questions: [
+      {
+        text: "Wann fiel die Berliner Mauer?",
+        answers: [
+          { text: "1987", right_wrong: false },
+          { text: "1989", right_wrong: true },
+          { text: "1991", right_wrong: false },
+          { text: "1993", right_wrong: false }
+        ],
+        explanation: "Die Mauer fiel am 9. November 1989."
+      },
+      {
+        text: "In welchem Jahr begann der Zweite Weltkrieg?",
+        answers: [
+          { text: "1937", right_wrong: false },
+          { text: "1939", right_wrong: true },
+          { text: "1941", right_wrong: false },
+          { text: "1945", right_wrong: false }
+        ],
+        explanation: "Am 1. September 1939 begann der Zweite Weltkrieg mit dem Überfall auf Polen."
+      },
+      {
+        text: "Wer war der erste Bundeskanzler der Bundesrepublik Deutschland?",
+        answers: [
+            { text: "Konrad Adenauer", right_wrong: true },
+            { text: "Willy Brandt", right_wrong: false },
+            { text: "Helmut Kohl", right_wrong: false },
+            { text: "Ludwig Erhard", right_wrong: false }
+          ],
+          explanation: "Konrad Adenauer war von 1949 bis 1963 der erste Bundeskanzler."
+        },
+        {
+          text: "Wann wurde die Unabhängigkeitserklärung der USA unterzeichnet?",
+          answers: [
+              { text: "1776", right_wrong: true },
+              { text: "1789", right_wrong: false },
+              { text: "1812", right_wrong: false },
+              { text: "1865", right_wrong: false }
+          ],
+          explanation: "Am 4. Juli 1776 erklärten die 13 Kolonien ihre Unabhängigkeit."
+        },
+        {
+          text: "Wer war der Kaiser des Römischen Reiches zur Zeit von Christi Geburt?",
+          answers: [
+              { text: "Julius Cäsar", right_wrong: false },
+              { text: "Augustus", right_wrong: true },
+              { text: "Nero", right_wrong: false },
+              { text: "Tiberius", right_wrong: false }
+          ],
+          explanation: "Kaiser Augustus regierte zur Zeit von Jesu Geburt."
+        },
+        {
+          text: "Welches Ereignis markierte den Beginn der Französischen Revolution?",
+          answers: [
+              { text: "Krönung Napoleons", right_wrong: false },
+              { text: "Sturm auf die Bastille", right_wrong: true },
+              { text: "Hundertjähriger Krieg", right_wrong: false },
+              { text: "Reformation durch Luther", right_wrong: false }
+          ],
+         explanation: "Der Sturm auf die Bastille am 14. Juli 1789 gilt als Beginn der Revolution."
+        }
+    ]
+  }
+];
+
+// Quiz schließen über ❌-Button
+document.getElementById('quiz-close').addEventListener('click', closeQuiz);
+
+/* API-Funktionen */
 async function loadCourses() {
   try {
     const response = await fetch('/api/courses');
-    if (!response.ok) throw new Error('Fehler beim Laden der Kurse');
+    if (!response.ok) throw new Error();
     return await response.json();
-  } catch (error) {
-    console.error('Kurse laden Fehler:', error);
-    showToast('Fehler beim Laden der Kurse');
-    return [];
+  } catch {
+    console.warn("⚠️ API nicht erreichbar – nutze Demo-Daten");
+    document.getElementById('demo-banner').classList.remove('hidden'); // Banner einblenden
+    return demoCourses;
   }
 }
+
 
 async function loadQuestions(courseId) {
   try {
     const response = await fetch(`/api/courses/${courseId}/questions`);
-    if (!response.ok) throw new Error('Fehler beim Laden der Fragen');
+    if (!response.ok) throw new Error();
     return await response.json();
-  } catch (error) {
-    console.error('Fragen laden Fehler:', error);
-    showToast('Fehler beim Laden der Fragen');
-    return [];
+  } catch {
+    const course = demoCourses.find(c => c.course_id === courseId);
+    return course ? course.questions : [];
   }
 }
 
@@ -650,9 +839,18 @@ async function createQuestion(questionData) {
   }
 }
 
-/* ===============================
-   Render-Funktionen
-   =============================== */
+// Demo-Banner schließen
+document.addEventListener("DOMContentLoaded", () => {
+  const closeDemoBtn = document.getElementById("close-demo");
+  if (closeDemoBtn) {
+    closeDemoBtn.addEventListener("click", () => {
+      document.getElementById("demo-banner").classList.add("hidden");
+    });
+  }
+});
+
+
+/* Render-Funktionen */
 function renderCourses(courses) {
   listEl.innerHTML = '';
 
@@ -712,9 +910,7 @@ function updateNavigationButtons() {
   nextBtn.disabled = currentIndex >= currentQuestions.length - 1;
 }
 
-/* ===============================
-   Quiz-Logik
-   =============================== */
+/* Quiz-Logik */
 async function openQuiz(course) {
   currentCourse = course;
   currentQuestions = await loadQuestions(course.course_id);
@@ -733,9 +929,7 @@ function closeQuiz() {
   currentIndex = 0;
 }
 
-/* ===============================
-   Utilities
-   =============================== */
+/* Utilities */
 function escapeHtml(str) {
   if (!str) return '';
   return String(str)
@@ -755,9 +949,7 @@ function showToast(msg) {
   }, 3000);
 }
 
-/* ===============================
-   Filter + Refresh
-   =============================== */
+/*  Filter + Refresh */
 function getFiltered() {
   const search = searchEl.value.trim().toLowerCase();
   return allCourses.filter(c => 
@@ -770,9 +962,7 @@ async function refreshList() {
   renderCourses(getFiltered());
 }
 
-/* ===============================
-   Modal "Frage erstellen"
-   =============================== */
+/* "Frage erstellen"*/
 globalAddBtn.addEventListener('click', () => {
   qForm.reset();
   modal.classList.remove('hidden');
@@ -822,9 +1012,8 @@ qForm.addEventListener('submit', async (e) => {
   }
 });
 
-/* ===============================
-   Navigation Buttons
-   =============================== */
+/* Navigation Buttons= */
+
 prevBtn.addEventListener('click', () => {
   if (currentIndex > 0) {
     currentIndex--;
@@ -846,9 +1035,7 @@ document.addEventListener('keydown', (e) => {
   }
 });
 
-/* ===============================
-   Init
-   =============================== */
+/* Init */
 searchEl.addEventListener('input', () => {
   renderCourses(getFiltered());
 });
