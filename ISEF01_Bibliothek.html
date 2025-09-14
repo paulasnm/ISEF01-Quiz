@@ -96,6 +96,12 @@
           <input id="tags" type="text" placeholder="z. B. Algebra, Schule">
         </div>
 
+        <!-- Erklärung -->
+        <div class="form-row">
+          <label for="q-explanation">Erklärung</label>
+          <textarea id="q-explanation" rows="3"></textarea>
+        </div>
+
         <div class="modal-actions">
           <button type="button" class="btn" id="cancel-modal">Abbrechen</button>
           <button type="submit" class="btn btn-primary">Speichern ✓</button>
@@ -976,18 +982,21 @@ qForm.addEventListener('submit', async (e) => {
   e.preventDefault();
 
   const text = document.getElementById('q-text').value.trim();
+  const correctIndex = Number(qForm.correct.value);
+  const category = document.getElementById('category').value.trim();
+  const explanation = document.getElementById('q-explanation').value.trim();
+
   const answers = [
     qForm.answer0.value.trim(),
     qForm.answer1.value.trim(),
     qForm.answer2.value.trim(),
     qForm.answer3.value.trim()
-  ];
-  const correctIndex = Number(qForm.correct.value);
-  const category = document.getElementById('category').value.trim();
-  const explanation = document.getElementById('q-explanation') ? 
-    document.getElementById('q-explanation').value.trim() : '';
+  ].map((a, i) => ({
+    text: a,
+    right_wrong: i === correctIndex
+  }));
 
-  if (!text || answers.some(a => !a) || Number.isNaN(correctIndex) || !category) {
+  if (!text || answers.some(a => !a.text) || Number.isNaN(correctIndex) || !category) {
     showToast('Bitte alle Pflichtfelder ausfüllen und eine richtige Antwort markieren.');
     return;
   }
@@ -996,7 +1005,6 @@ qForm.addEventListener('submit', async (e) => {
     await createQuestion({
       text,
       answers,
-      correctIndex,
       category,
       explanation
     });
@@ -1012,7 +1020,7 @@ qForm.addEventListener('submit', async (e) => {
   }
 });
 
-/* Navigation Buttons= */
+/* Navigation Buttons */
 
 prevBtn.addEventListener('click', () => {
   if (currentIndex > 0) {
