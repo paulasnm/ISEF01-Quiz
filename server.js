@@ -266,9 +266,16 @@ app.use((err, req, res, next) => {
 });
 
 // Server starten (wichtig: server statt app!)
-server.listen(PORT, '0.0.0.0', () => {
-  console.log(`🚀 Schatzinsel Server mit Socket.IO läuft auf Port ${PORT}`);
-  console.log(`🎮 Lobby-System aktiviert`);
-  console.log(`📋 Demo-Login: demo/demo123 oder admin/admin123`);
-  console.log(`🌐 Socket.IO bereit für Multiplayer`);
-});
+if (require.main === module) {
+  // Nur starten, wenn die Datei direkt mit `node server.js` ausgeführt wird
+  server.listen(PORT, '0.0.0.0', () => {
+    console.log(`🚀 Schatzinsel Server mit Socket.IO läuft auf Port ${PORT}`);
+    console.log(`🎮 Lobby-System aktiviert`);
+    console.log(`📋 Demo-Login: demo/demo123 oder admin/admin123`);
+    console.log(`🌐 Socket.IO bereit für Multiplayer`);
+  });
+}
+
+// Für Tests exportieren
+module.exports = { app, server, io };
+

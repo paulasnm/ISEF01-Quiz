@@ -295,41 +295,33 @@ footer {
 
 /* Design für Smartphones (bis 600px) */
 @media (max-width: 600px) {
-  body {
-    padding: 0 15px;
-    margin-left: 10px;
-  }
   h1 {
-    font-size: 2rem !important;
-    margin-top: 30px;
-  }
-  .toolbar { 
-    grid-template-columns: 1fr;
-    gap: 10px;
-  }
-  .list {
-    grid-template-columns: 1fr;
-    gap: 20px;
-  }
-  .bottom-nav {
-    font-size: 0.9em;
-    flex-wrap: wrap;
-    gap: 10px;
-    justify-content: center;
-  }
-  .bottom-nav a {
-    padding: 5px;
-  }
+  font-size: 2rem !important;
+  margin-top: 30px;
+}
+.toolbar { 
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+.list {
+  grid-template-columns: 1fr;
+  gap: 20px;
+}
+.bottom-nav {
+  font-size: 0.9em;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+.bottom-nav a {
+  padding: 5px;
+}
 }
 
-/* Design für Tablets (601px bis 1024px) */
+/* Tablets (ab 601px bis 1024px) */
 @media (min-width: 601px) and (max-width: 1024px) {
-  body {
-    padding: 0 30px;
-    margin-left: 15px;
-  }
   h1 {
-    font-size: 2.5rem !important;
+    font-size: 2.4rem !important;
     margin-top: 40px;
   }
   .toolbar {
@@ -344,8 +336,18 @@ footer {
   }
 }
 
-/* Design für Laptops/Desktop (ab 1025px) */
+/* Laptops/Desktop (ab 1025px) */
 @media (min-width: 1025px) {
+  h1 {
+    font-size: 3rem !important;
+    margin-top: 60px;
+  }
+  .list {
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 28px;
+  }
+  .bottom-nav {
+    font-size: 1.3em;
   body {
     padding: 0 40px;
     margin-left: 25px;
@@ -364,6 +366,7 @@ footer {
   .bottom-nav {
     font-size: 1.3em;
   }
+}
 }
 </style>
 
