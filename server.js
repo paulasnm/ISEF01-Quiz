@@ -272,3 +272,5 @@ server.listen(PORT, '0.0.0.0', () => {
   console.log(`📋 Demo-Login: demo/demo123 oder admin/admin123`);
   console.log(`🌐 Socket.IO bereit für Multiplayer`);
 });
+
+module.exports = app; // Für Tests exportieren
