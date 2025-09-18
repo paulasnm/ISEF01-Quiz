@@ -414,9 +414,9 @@ footer {
 <script>
 
     // Konfiguration der Seite
-    const QUESTION_ID = "Q1";           // <-- pro Frage anpassen ("Q2", "Q3", ...)
-    const IS_FIRST_QUESTION = true;     // <-- auf Frage 1: true
-    const IS_RESULTS_PAGE = false;      // <-- nur auf Ergebnis-Seite: true
+    const QUESTION_ID = "Q1";           
+    const IS_FIRST_QUESTION = true;     
+    const IS_RESULTS_PAGE = false;      
     
     
     // Münzen-Logik (Zählen der Münzen)
@@ -499,34 +499,44 @@ footer {
     
     
     // Chat-Funktionalität
-    const chatToggle = document.getElementById("chat-toggle");
-    const chatWindow = document.getElementById("chat-window");
-    const chatClose = document.getElementById("");
-    const chatMessages = document.getElementById("chat-messages");
-    const chatInput = document.getElementById("chat-input");
-    const chatSend = document.getElementById("chat-send");
-    
-    chatToggle.addEventListener("click", () => {
-      chatWindow.style.display = "flex";
-    });
-    chatClose.addEventListener("click", () => {
-      chatWindow.style.display = "none";
-    });
-    function addMessage(text, self = true) {
-      const msg = document.createElement("div");
-      msg.classList.add("chat-message", self ? "chat-self" : "chat-other");
-      msg.textContent = text;
-      chatMessages.appendChild(msg);
-      chatMessages.scrollTop = chatMessages.scrollHeight;
-    }
-    chatSend.addEventListener("click", () => {
-      if (chatInput.value.trim() !== "") {
-        addMessage(chatInput.value, true);
-        chatInput.value = "";
-      }
-    });
-    chatInput.addEventListener("keypress", (e) => {
-      if (e.key === "Enter") chatSend.click();
-    });
+const chatToggle = document.getElementById("chat-toggle");
+const chatWindow = document.getElementById("chat-window");
+const chatClose = document.getElementById("chat-close");
+const chatMessages = document.getElementById("chat-messages");
+const chatInput = document.getElementById("chat-input");
+const chatSend = document.getElementById("chat-send");
+
+// Toggle-Funktion für den Chat
+chatToggle.addEventListener("click", () => {
+  if (chatWindow.style.display === "flex") {
+    chatWindow.style.display = "none";
+  } else {
+    chatWindow.style.display = "flex";
+  }
+});
+
+// ✖-Button schließt den Chat
+chatClose.addEventListener("click", () => {
+  chatWindow.style.display = "none";
+});
+
+function addMessage(text, self = true) {
+  const msg = document.createElement("div");
+  msg.classList.add("chat-message", self ? "chat-self" : "chat-other");
+  msg.textContent = text;
+  chatMessages.appendChild(msg);
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+chatSend.addEventListener("click", () => {
+  if (chatInput.value.trim() !== "") {
+    addMessage(chatInput.value, true);
+    chatInput.value = "";
+  }
+});
+
+chatInput.addEventListener("keypress", (e) => {
+  if (e.key === "Enter") chatSend.click();
+});
     
     </script>
